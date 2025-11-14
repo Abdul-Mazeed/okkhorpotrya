@@ -32,6 +32,43 @@
   },{threshold:0.1});
   document.querySelectorAll('section').forEach(s=>observer.observe(s));
 })();
+document.addEventListener("DOMContentLoaded", () => {
+
+  const hamburger = document.getElementById("hamburger");
+  const sideMenu = document.getElementById("sideMenu");
+  const overlay = document.getElementById("menuOverlay");
+
+  if (hamburger && sideMenu && overlay) {
+
+    // Open / Close
+    hamburger.onclick = () => {
+      sideMenu.classList.toggle("show");
+      hamburger.classList.toggle("active");
+      overlay.classList.toggle("show");
+    };
+
+    // Close when clicking any menu link
+    sideMenu.querySelectorAll("a").forEach(link => {
+      link.onclick = () => {
+        sideMenu.classList.remove("show");
+        hamburger.classList.remove("active");
+        overlay.classList.remove("show");
+      };
+    });
+
+    // Close when clicking outside (overlay)
+    overlay.onclick = () => {
+      sideMenu.classList.remove("show");
+      hamburger.classList.remove("active");
+      overlay.classList.remove("show");
+    };
+
+  }
+});
+
+
+
+
 // --- Donation reveal ---
 const donateBtn = document.getElementById("donateReveal");
 const donateNumber = document.getElementById("donateNumber");
@@ -42,3 +79,4 @@ if (donateBtn && donateNumber) {
     donateBtn.textContent = "ধন্যবাদ! | THANK YOU";
   });
 }
+
