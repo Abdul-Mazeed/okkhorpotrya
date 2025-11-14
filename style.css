@@ -18,6 +18,25 @@
   --accent2:#91ad9f;
   --outline:rgba(255,255,255,.1);
 }
+/* Back Home Button */
+.back-home {
+  display: inline-block;
+  margin: 20px 6% 0;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  border-radius: var(--radius);
+  text-decoration: none;
+  box-shadow: 0 6px 14px rgba(0,0,0,.08);
+  transition: .25s ease;
+}
+
+.back-home:hover {
+  background: color-mix(in srgb, var(--accent) 80%, black);
+  transform: translateY(-2px);
+}
+
 
 * { box-sizing: border-box; }
 html, body {
@@ -38,6 +57,58 @@ body::after {
   background: linear-gradient(180deg, rgba(255,255,255,.4) 0%, transparent 100%);
   mix-blend-mode: overlay; pointer-events: none;
 }
+/* Force Hind Siliguri font for Donate section */
+#donate, 
+#donate h2, 
+#donate .text-block, 
+#donate .btn, 
+#donate .donate-number {
+  font-family: "Hind Siliguri", sans-serif !important;
+}
+/* Stylish text block cards */
+section .text-block {
+  background: var(--panel);
+  padding: 28px 24px;
+  border-radius: var(--radius);
+  border-left: 5px solid var(--accent);
+  border: 1px solid var(--outline);
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  margin-top: 20px;
+  font-size: 18px;
+  line-height: 1.85;
+  color: var(--accent2);
+  animation: fadeInUp .8s ease forwards;
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+
+/* Smooth fade-up animation */
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+section h2 {
+  font-size: 30px;
+  margin-bottom: 12px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline accent for section titles */
+section h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 50%;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
 
 /* ===========================
    Navbar
@@ -142,7 +213,7 @@ input:checked + .slider:before { transform: translateX(22px); }
    Sections
    =========================== */
 section {
-  padding: 100px 6%;
+  padding: 60px 6%;
   max-width: 1000px; margin: auto; text-align: center;
   position: relative; z-index: 1;
   opacity: 0; transform: translateY(20px);
@@ -401,5 +472,294 @@ a.inline:hover { color: var(--accent); border-color: var(--accent); }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
+  
 }
+
+/* ===================
+   Hamburger Navigation
+   =================== */
+
+.nav-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 18px;
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999;
+  border-bottom: 1px solid var(--outline);
+}
+
+.logo-left {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+}
+
+.hamburger {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  user-select: none;
+  color: var(--accent2);
+  transition: .3s;
+}
+.hamburger:hover {
+  background: var(--outline);
+}
+
+/* Side Menu */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 240px;
+  background: var(--panel);
+  backdrop-filter: blur(12px);
+  border-left: 1px solid var(--outline);
+  padding: 70px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transform: translateX(100%);
+  transition: .35s ease;
+  z-index: 1000;
+}
+
+.side-menu a {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.side-menu.show {
+  transform: translateX(0);
+}
+
+.hidden {
+  display: none; /* used for modals also */
+}
+/* ===================
+   Hamburger Navigation (Rewritten)
+   =================== */
+
+.nav-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 18px;
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999;
+  border-bottom: 1px solid var(--outline);
+}
+
+.logo-left {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+}
+
+.hamburger {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  user-select: none;
+  color: var(--accent2);
+  transition: .3s;
+}
+.hamburger:hover {
+  background: var(--outline);
+}
+
+/* Side Menu */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 240px;
+  background: var(--panel);
+  backdrop-filter: blur(12px);
+  border-left: 1px solid var(--outline);
+  padding: 70px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transform: translateX(100%);
+  transition: .35s ease;
+  z-index: 1000;
+}
+
+.side-menu a {
+  position: relative;
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 16px;
+  padding-bottom: 4px;
+  display: inline-block;
+}
+
+/* Animated Underline */
+.side-menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--accent);
+  transition: width .25s ease-in-out;
+}
+
+/* On hover → underline expands smoothly */
+.side-menu a:hover::after {
+  width: 100%;
+}
+
+
+.side-menu.show {
+  transform: translateX(0);
+}
+/* Professional Hamburger Icon */
+.hamburger {
+  width: 32px;
+  height: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: var(--accent2);
+  border-radius: 4px;
+  transition: transform .35s ease, opacity .35s ease;
+}
+
+/* Optional hover color */
+.hamburger:hover span {
+  background: var(--accent);
+}
+/* When menu is open */
+.hamburger.active span:nth-child(1) {
+  transform: translateY(11px) rotate(45deg);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-11px) rotate(-45deg);
+}
+/* Dark overlay behind menu */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(2px);
+  z-index: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+
+.menu-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* ===========================
+   NEWS PORTAL SECTION
+   =========================== */
+
+.news-section {
+  padding: 60px 6%;
+  max-width: 1100px;
+  margin: auto;
+  text-align: center;
+}
+
+.news-section h2 {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.news-card {
+  background: var(--panel);
+  border: 1px solid var(--outline);
+  border-radius: var(--radius);
+  overflow: hidden;
+  padding: 0 0 20px;
+  box-shadow: 0 8px 16px rgba(0,0,0,.08);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0,0,0,.12);
+}
+
+.news-img {
+  height: 160px;
+  width: 100%;
+  background: linear-gradient(140deg, var(--accent2), var(--accent));
+  opacity: 0.85;
+}
+
+.news-content {
+  padding: 18px 20px;
+  text-align: left;
+}
+
+.news-content h3 {
+  font-size: 18px;
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+
+.news-content p {
+  font-size: 15px;
+  color: var(--accent2);
+  margin-bottom: 14px;
+}
+
+.read-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-weight: 600;
+  transition: background .2s ease;
+}
+
+.read-btn:hover {
+  background: color-mix(in srgb, var(--accent) 80%, black);
+}
+
 
