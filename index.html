@@ -12,24 +12,39 @@
 </head>
 
 <body>
-  <nav>
-    <a href="#home">প্রচ্ছদ</a>
-    <a href="#writings">লেখনী</a>
+  <!-- Hamburger Navigation -->
+<!-- Hamburger Navigation (Rewritten & Fixed) -->
+<div class="nav-container">
+  <div class="logo-left">OKKHORPOTRO</div>
+
+  <!-- Hamburger Icon -->
+ <div id="hamburger" class="hamburger">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+
+  <!-- Slide Menu -->
+  <div id="sideMenu" class="side-menu">
+    <a href="#home">হোম</a>
+    <a href="#writings">আর্টিকেল</a>
     <a href="#lokkho">লক্ষ্য</a>
     <a href="#uddesho">উদ্দেশ্য</a>
     <a href="#songkolpo">সংকল্প</a>
-    <a href="#join">যুক্ত হোন</a>
-    <a href="#donate">অনুদান</a>
-    <a href="#about">আমাদের কথা</a>
+    <a href="#join">জয়েন</a>
+    <a href="#donate">ডোনেট</a>
+    <a href="#about">আমাদের সম্পর্কে</a>
     <a href="#contact">যোগাযোগ</a>
 
-    <div class="theme-toggle">
-      <label class="switch">
-        <input type="checkbox" id="themeSwitch">
-        <span class="slider"></span>
-      </label>
-    </div>
-  </nav>
+    <!-- Account Options -->
+    <a href="#" id="openSignupNav">ক্রিয়েট অ্যাকাউন্ট</a>
+    <a href="#" id="openLoginNav">লগ ইন</a>
+  </div>
+</div>
+<!-- Background Overlay -->
+<div id="menuOverlay" class="menu-overlay"></div>
+
 
   <!-- Floating letters -->
   <div class="floating-letters" aria-hidden="true">
@@ -44,6 +59,42 @@
     <p>সংস্কারের পথে, নতুন প্রজন্মের প্রত্যয়ে।</p>
     <a href="articles.html" class="btn">লেখনী পড়ুন | READ WRITINGS</a>
   </section>
+  <!-- NEWS PORTAL SECTION -->
+<section id="news" class="news-section">
+  <h2>সংবাদ | NEWS PORTAL</h2>
+  <p class="section-sub">Latest literary & cultural updates</p>
+
+  <div class="news-grid">
+    <div class="news-card">
+      <div class="news-img"></div>
+      <div class="news-content">
+        <h3>অক্ষরপত্রের নতুন সংখ্যা প্রকাশ</h3>
+        <p>নতুন কবিতা, প্রবন্ধ ও গল্প নিয়ে হাজির হলো অক্ষরপত্রের জানুয়ারি সংখ্যা...</p>
+        <a class="read-btn" href="#">Read More</a>
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="news-img"></div>
+      <div class="news-content">
+        <h3>কবিতা পাঠ অনুষ্ঠান</h3>
+        <p>রাজধানীতে আয়োজিত সাহিত্য সন্ধ্যায় তরুণ কবিদের অংশগ্রহণ...</p>
+        <a class="read-btn" href="#">Read More</a>
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="news-img"></div>
+      <div class="news-content">
+        <h3>ইসলামী সাহিত্য গবেষণা অগ্রগতি</h3>
+        <p>বাংলা ইসলামী সাহিত্যের আধুনিক পর্যায়ের নতুন গবেষণা কর্ম...</p>
+        <a class="read-btn" href="#">Read More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+  
 
 <section id="writings" class="featured">
   <h2 class="animated-title">সাম্প্রতিক লেখনী | RECENT WRITINGS</h2>
@@ -67,12 +118,14 @@
 
   <!-- Lokkho -->
   <section id="lokkho">
+    
     <h2>লক্ষ্য | LOKKHO</h2>
     <div class="text-block">
       শব্দের অতলান্তিক মিছিলের নেতৃত্বে বিশ্ব দরবারে ইসলামী বাংলা ভাষা ও সাহিত্যকে উঁচিয়ে ধরা
       এবং অভেদ্য লেখনীর দূর্গ গড়ে ত্বাগূতের শিরঃপাত।
     </div>
   </section>
+  
 
   <!-- Uddesho -->
   <section id="uddesho">
@@ -91,6 +144,7 @@
       ম্যাগাজিন প্রকাশ, পুস্তক প্রকাশনা, সংবাদমাধ্যম ও শিল্প-সাহিত্যে ইসলামকে সমৃদ্ধময় করা।
     </div>
   </section>
+  
 
   <!-- Join -->
   <section id="join">
