@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Team | OKKHORPOTRO</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* GLOBAL */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "Hind Siliguri", sans-serif;
+  background: linear-gradient(145deg, #1f1e1c, #242321, #1b1a18);
+  color: #f2ede3;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url('https://www.transparenttextures.com/patterns/cubes.png');
+  opacity: .04;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* HEADER */
+.header {
+  width: 100%;
+  padding: 18px 28px;
+  background: rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+  color: #d6a18b;
+  font-size: 24px;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  text-align: center;
+}
+
+.back-btn {
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: .25s ease;
+}
+.back-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* TEAM SECTION */
+.team-section {
+  padding: 60px 6%;
+  text-align: center;
+}
+
+.team-sub { color: #91ad9f; margin-bottom: 40px; }
+
+.team-grid {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.team-card {
+  padding: 26px 20px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+  text-align: center;
+  transition: .35s ease;
+  cursor: pointer;
+}
+
+.team-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.15);
+}
+
+.team-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  margin: auto;
+  margin-bottom: 14px;
+  border: 3px solid #a2352a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.role { font-size: 14px; color: #d6a18b; margin-bottom: 8px; }
+.bio { font-size: 14px; color: #91ad9f; }
+
+/* ===========================
+   PROFILE MODAL
+=========================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(6px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal {
+  width: 90%;
+  max-width: 480px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 28px;
+  text-align: center;
+  animation: pop .35s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal img {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  margin-bottom: 14px;
+  border: 3px solid #a2352a;
+}
+
+.modal h3 { font-size: 22px; margin-bottom: 4px; }
+.modal .role { font-size: 15px; color: #d6a18b; margin-bottom: 14px; }
+
+.modal .fullbio {
+  font-size: 15px;
+  color: #d6e0d8;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  margin-top: 14px;
+  padding: 10px 20px;
+  background: #a2352a;
+  border: none;
+  color: white;
+  font-size: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .25s ease;
+}
+.close-btn:hover {
+  background: #832a22;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <a href="index.html" class="back-btn">⟵ হোম</a>
+  OKKHORPOTRO TEAM
+</div>
+
+<!-- TEAM SECTION -->
+<section class="team-section">
+  <h2>আমাদের টিম</h2>
+  <p class="team-sub">অক্ষরপত্রের পেছনের সৃজনশীল যাত্রীরা</p>
+
+  <div class="team-grid">
+
+    <div class="team-card" data-name="নাম এখানে" 
+         data-role="Founder & Editor"
+         data-photo="assets/team1.jpg"
+         data-fullbio="বাংলা ইসলামী সাহিত্য, সংস্কৃতি ও চিন্তার উন্নয়নে নেতৃত্ব প্রদানকারী। শব্দের শক্তিতে পরিবর্তন আনার স্বপ্নে পথচলা।">
+      <div class="team-photo" style="background-image:url('assets/team1.jpg');"></div>
+      <h3>নাম এখানে</h3>
+      <p class="role">Founder & Editor</p>
+      <p class="bio">সাহিত্য ও গবেষণার অগ্রযাত্রী</p>
+    </div>
+
+    <div class="team-card" data-name="নাম এখানে"
+         data-role="Content Lead"
+         data-photo="assets/team2.jpg"
+         data-fullbio="প্রবন্ধ, কবিতা ও গল্প রচনায় নিবেদিত। শব্দকে হৃদয় থেকে কাগজে আনার শিল্পে দক্ষ।">
+      <div class="team-photo" style="background-image:url('assets/team2.jpg');"></div>
+      <h3>নাম এখানে</h3>
+      <p class="role">Content Lead</p>
+      <p class="bio">লেখনীর নতুন ধারার নির্মাতা</p>
+    </div>
+
+    <div class="team-card" data-name="নাম এখানে"
+         data-role="Creative Designer"
+         data-photo="assets/team3.jpg"
+         data-fullbio="রঙ, রেখা ও শিল্পের ভাষায় গল্প বলা তাঁর নেশা। অক্ষরপত্রের ভিজ্যুয়াল পরিচয় গড়ে তোলার কারিগর।">
+      <div class="team-photo" style="background-image:url('assets/team3.jpg');"></div>
+      <h3>নাম এখানে</h3>
+      <p class="role">Creative Designer</p>
+      <p class="bio">নকশার মহাসড়কের পথিক</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalBox">
+    <img id="modalPhoto" src="">
+    <h3 id="modalName"></h3>
+    <p class="role" id="modalRole"></p>
+    <p class="fullbio" id="modalBio"></p>
+    <button class="close-btn" id="closeModal">Close</button>
+  </div>
+</div>
+
+<script>
+/* OPEN MODAL */
+document.querySelectorAll(".team-card").forEach(card => {
+  card.addEventListener("click", () => {
+    document.getElementById("modalName").innerText = card.dataset.name;
+    document.getElementById("modalRole").innerText = card.dataset.role;
+    document.getElementById("modalBio").innerText = card.dataset.fullbio;
+    document.getElementById("modalPhoto").src = card.dataset.photo;
+
+    document.getElementById("modalOverlay").style.display = "flex";
+  });
+});
+
+/* CLOSE MODAL */
+document.getElementById("closeModal").onclick = () => {
+  document.getElementById("modalOverlay").style.display = "none";
+};
+document.getElementById("modalOverlay").onclick = (e) => {
+  if (e.target === e.currentTarget) {
+    e.currentTarget.style.display = "none";
+  }
+};
+</script>
+
+</body>
+</html>
