@@ -8,45 +8,520 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ===========================
+       OKKHORPOTRO — Global Theme
+       =========================== */
+    :root {
+      --bg: #f9f5e9;
+      --ink: #1c1c1c;
+      --accent: #a2352a;
+      --accent2: #4e6e5d;
+      --panel: rgba(255,255,255,0.8);
+      --outline: rgba(0,0,0,.08);
+      --radius: 14px;
+    }
+    :root.dark {
+      --bg:#1f1e1c;
+      --ink:#f0eada;
+      --panel:rgba(42,41,40,0.85);
+      --accent:#d6a18b;
+      --accent2:#91ad9f;
+      --outline:rgba(255,255,255,.1);
+    }
+    /* Back Home Button */
+    .back-home {
+      display: inline-block;
+      margin: 20px 6% 0;
+      padding: 10px 16px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      border-radius: var(--radius);
+      text-decoration: none;
+      box-shadow: 0 6px 14px rgba(0,0,0,.08);
+      transition: .25s ease;
+    }
+
+    .back-home:hover {
+      background: color-mix(in srgb, var(--accent) 80%, black);
+      transform: translateY(-2px);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: "Hind Siliguri", sans-serif;
+      background: var(--bg); color: var(--ink);
+      scroll-behavior: smooth; transition: background .6s, color .6s;
+    }
+
+    /* Gentle texture */
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -2;
+      background: radial-gradient(var(--ink) 1px, transparent 1px);
+      background-size: 3px 3px; opacity: .05;
+    }
+    body::after {
+      content: ""; position: fixed; inset: 0; z-index: -1;
+      background: linear-gradient(180deg, rgba(255,255,255,.4) 0%, transparent 100%);
+      mix-blend-mode: overlay; pointer-events: none;
+    }
+
+    /* Force Hind Siliguri font for Donate section */
+    #donate, #donate h2, #donate .text-block, #donate .btn, #donate .donate-number {
+      font-family: "Hind Siliguri", sans-serif !important;
+    }
+
+    /* Stylish text block cards */
+    section .text-block {
+      background: var(--panel);
+      padding: 28px 24px;
+      border-radius: var(--radius);
+      border-left: 5px solid var(--accent);
+      border: 1px solid var(--outline);
+      box-shadow: 0 8px 20px rgba(0,0,0,.06);
+      margin-top: 20px;
+      font-size: 18px;
+      line-height: 1.85;
+      color: var(--accent2);
+      animation: fadeInUp .8s ease forwards;
+      opacity: 0;
+      transform: translateY(15px);
+    }
+
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    section h2 {
+      font-size: 30px;
+      margin-bottom: 12px;
+      position: relative;
+      display: inline-block;
+    }
+    section h2::after {
+      content: "";
+      position: absolute; left: 0; bottom: -6px;
+      width: 50%; height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* ===========================
+       Hamburger Navigation
+       =========================== */
+
+    .nav-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      padding: 10px 18px;
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 999;
+      border-bottom: 1px solid var(--outline);
+    }
+
+    .logo-left { font-weight: 700; font-size: 18px; color: var(--ink); }
+
+    /* Hamburger Icon */
+    .hamburger {
+      width: 32px;
+      height: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 100%; height: 3px; background: var(--accent2);
+      border-radius: 4px;
+      transition: transform .35s ease, opacity .35s ease;
+    }
+    .hamburger:hover span { background: var(--accent); }
+
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(11px) rotate(45deg);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-11px) rotate(-45deg);
+    }
+
+    /* Side Menu */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 240px;
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+      border-left: 1px solid var(--outline);
+      padding: 70px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      transform: translateX(100%);
+      transition: .35s ease;
+      z-index: 1000;
+    }
+
+    .side-menu a {
+      text-decoration: none;
+      font-weight: 600;
+      color: var(--ink);
+      font-size: 16px;
+      padding-bottom: 4px;
+      display: inline-block;
+      position: relative;
+    }
+    .side-menu a::after {
+      content: ""; position: absolute; left: 0; bottom: 0;
+      height: 2px; width: 0%; background: var(--accent);
+      transition: width .25s ease;
+    }
+    .side-menu a:hover::after { width: 100%; }
+    .side-menu.show { transform: translateX(0); }
+
+    /* Overlay */
+    .menu-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(2px);
+      z-index: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: .3s ease;
+    }
+    .menu-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Floating Letters */
+    .floating-letters {
+      position: fixed; inset: 0;
+      pointer-events: none; overflow: hidden;
+      z-index: 0;
+    }
+    .floating-letters span {
+      position: absolute;
+      font-size: clamp(24px, 6vw, 80px);
+      font-weight: 700;
+      opacity: .05;
+      color: var(--ink);
+      animation: float 25s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(110vh) translateX(-10vw); }
+      100% { transform: translateY(-10vh) translateX(10vw); }
+    }
+
+    /* Hero */
+    .hero {
+      height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      z-index: 1;
+    }
+    .hero h1 {
+      font-size: clamp(48px, 7vw, 110px);
+      margin: 0; line-height: 1.05;
+    }
+    .hero p { color: var(--accent); font-size: 20px; margin: 10px 0 26px; }
+    .logo {
+      width: 120px; margin-bottom: 14px;
+      opacity: 0; animation: riseFade 2s ease forwards;
+    }
+    @keyframes riseFade {
+      0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      background: var(--accent); color: #fff !important;
+      text-decoration: none; font-weight: 600;
+      box-shadow: 0 8px 18px rgba(0,0,0,.08);
+    }
+
+    /* Sections */
+    section {
+      padding: 60px 6%;
+      max-width: 1000px; margin: auto; text-align: center;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .8s ease, transform .8s ease;
+      z-index: 1;
+    }
+    section.visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .section-sub { color: var(--accent2); margin-bottom: 38px; }
+
+    /* Featured Writings */
+    .featured { position: relative; padding-bottom: 60px; overflow: hidden; }
+    .animated-title { font-size: 30px; animation: glow 3s ease-in-out infinite alternate; }
+    @keyframes glow {
+      0% { text-shadow: 0 0 6px rgba(162,53,42,.3); }
+      100% { text-shadow: 0 0 18px rgba(162,53,42,.6); }
+    }
+
+    .scroll-container {
+      display: flex; gap: 20px;
+      width: max-content;
+      padding: 20px 0;
+      animation: scrollWritings 35s linear infinite;
+    }
+    @keyframes scrollWritings {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .scroll-container:hover { animation-play-state: paused; }
+
+    .writing-card {
+      flex: 0 0 280px;
+      background: var(--panel);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: left;
+      box-shadow: 0 6px 14px rgba(0,0,0,.05);
+      border: 1px solid var(--outline);
+    }
+    .writing-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 22px rgba(0,0,0,.15);
+    }
+    .tag {
+      display: inline-block; padding: 2px 8px;
+      background: var(--accent2); color: #fff;
+      font-size: 12px; border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    /* Donate Section */
+    .donate-btn { background: var(--accent2); margin-top: 20px; }
+    .donate-number {
+      display: none;
+      margin-top: 16px; font-size: 18px;
+      color: var(--accent);
+      background: var(--panel);
+      padding: 14px; border-radius: var(--radius);
+      width: fit-content; margin-inline: auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,.1);
+      animation: fadeIn .6s ease;
+    }
+
+    /* News Cards */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+      gap: 22px; margin-top: 30px;
+    }
+    .news-card {
+      background: var(--panel);
+      border-radius: var(--radius);
+      border: 1px solid var(--outline);
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0,0,0,.08);
+      transition: .25s;
+    }
+    .news-card:hover { transform: translateY(-6px); }
+    .news-img {
+      height: 160px;
+      background: linear-gradient(140deg, var(--accent2), var(--accent));
+      opacity: .85;
+    }
+    .news-content { padding: 18px 20px; text-align: left; }
+    .read-btn {
+      background: var(--accent);
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      color: #fff; text-decoration: none;
+    }
+
+    footer {
+      padding: 20px; text-align: center;
+      font-size: 14px; color: var(--accent2);
+      border-top: 1px solid var(--outline);
+    }
+    /* ===========================
+   Floating Theme Toggle Button
+   =========================== */
+
+.theme-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1200;
+}
+
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 28px;
+}
+
+.theme-switch input {
+  display: none;
+}
+
+.slider-round {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--accent2);
+  border-radius: 34px;
+  transition: .4s;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+}
+
+.slider-round:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: .4s;
+}
+
+input:checked + .slider-round {
+  background: var(--accent);
+}
+
+input:checked + .slider-round:before {
+  transform: translateX(26px);
+}
+/* ===========================
+   Emoji Floating Theme Button
+   =========================== */
+
+.emoji-theme-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: var(--panel);
+  box-shadow: 0 8px 20px rgba(0,0,0,.25);
+  cursor: pointer;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  transition: transform .25s ease, background .25s ease;
+  z-index: 2000;
+}
+
+.emoji-theme-btn:hover {
+  transform: translateY(-4px);
+  background: color-mix(in srgb, var(--panel) 85%, black);
+}
+/* ===========================
+   Submenu Styles
+   =========================== */
+
+.submenu-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.submenu-toggle {
+  background: none;
+  border: none;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.submenu-toggle:hover {
+  color: var(--accent);
+}
+
+.submenu {
+  display: none;
+  flex-direction: column;
+  margin-left: 12px;
+  border-left: 2px solid var(--outline);
+  padding-left: 12px;
+  animation: fadeIn .3s ease;
+}
+
+.submenu a {
+  font-size: 15px;
+  padding: 4px 0;
+  color: var(--accent2);
+  font-weight: 500;
+}
+
+.submenu a:hover {
+  color: var(--accent);
+}
+
+
+
+  </style>
 </head>
 
 <body>
-  <!-- Hamburger Navigation -->
-<!-- Hamburger Navigation (Rewritten & Fixed) -->
-<div class="nav-container">
-  <div class="logo-left">OKKHORPOTRO</div>
 
-  <!-- Hamburger Icon -->
- <div id="hamburger" class="hamburger">
-  <span></span>
-  <span></span>
-  <span></span>
-</div>
+  <!-- Navigation -->
+  <div class="nav-container">
+    <div class="logo-left">OKKHORPOTRO</div>
+    <div id="hamburger" class="hamburger">
+      <span></span><span></span><span></span>
+    </div>
 
+    <div id="sideMenu" class="side-menu">
+      <a href="#home">হোম</a>
+      <div class="submenu-container">
+  <button class="submenu-toggle">আর্টিকেল ▾</button>
 
-  <!-- Slide Menu -->
-  <div id="sideMenu" class="side-menu">
-    <a href="#home">হোম</a>
-    <a href="#writings">আর্টিকেল</a>
-    <a href="#lokkho">লক্ষ্য</a>
-    <a href="#uddesho">উদ্দেশ্য</a>
-    <a href="#songkolpo">সংকল্প</a>
-    <a href="#join">জয়েন</a>
-    <a href="#donate">ডোনেট</a>
-    <a href="#about">আমাদের সম্পর্কে</a>
-    <a href="#contact">যোগাযোগ</a>
-
-    <!-- Account Options -->
-    <a href="#" id="openSignupNav">ক্রিয়েট অ্যাকাউন্ট</a>
-    <a href="#" id="openLoginNav">লগ ইন</a>
+  <div class="submenu">
+    <a href="probondho.html">প্রবন্ধ</a>
+    <a href="kobita.html">কবিতা</a>
+    <a href="golpo.html">গল্প</a>
+    <a href="goddo.html">গদ্য</a>
   </div>
 </div>
-<!-- Background Overlay -->
-<div id="menuOverlay" class="menu-overlay"></div>
 
+      <a href="#lokkho">লক্ষ্য</a>
+      <a href="#uddesho">উদ্দেশ্য</a>
+      <a href="#songkolpo">সংকল্প</a>
+      <a href="#join">জয়েন</a>
+      <a href="#donate">ডোনেট</a>
+      <a href="#about">আমাদের সম্পর্কে</a>
+      <a href="#contact">যোগাযোগ</a>
+      <a href="login.html">ক্রিয়েট অ্যাকাউন্ট</a>
+      <a href="#">লগ ইন</a>
+    </div>
+  </div>
 
-  <!-- Floating letters -->
+  <div id="menuOverlay" class="menu-overlay"></div>
+
+  <!-- Floating Letters -->
   <div class="floating-letters" aria-hidden="true">
     <span>অ</span><span>ক</span><span>্ষ</span><span>র</span><span>প</span><span>ত</span><span>্</span><span>র</span>
     <span>ল</span><span>ে</span><span>খ</span><span>া</span><span>শ</span><span>ব</span><span>্</span><span>দ</span>
@@ -54,85 +529,73 @@
 
   <!-- Hero -->
   <section id="home" class="hero">
-    <img src="assets/logo.png" alt="Okkhorpotro Logo" class="logo" />
+    <img src="assets/logo.png" class="logo" alt="Okkhorpotro Logo"/>
     <h1>অক্ষরপত্র | OKKHORPOTRO</h1>
     <p>সংস্কারের পথে, নতুন প্রজন্মের প্রত্যয়ে।</p>
     <a href="articles.html" class="btn">লেখনী পড়ুন | READ WRITINGS</a>
   </section>
-  <!-- NEWS PORTAL SECTION -->
-<section id="news" class="news-section">
-  <h2>সংবাদ | NEWS PORTAL</h2>
-  <p class="section-sub">Latest literary & cultural updates</p>
 
-  <div class="news-grid">
-    <div class="news-card">
-      <div class="news-img"></div>
-      <div class="news-content">
-        <h3>অক্ষরপত্রের নতুন সংখ্যা প্রকাশ</h3>
-        <p>নতুন কবিতা, প্রবন্ধ ও গল্প নিয়ে হাজির হলো অক্ষরপত্রের জানুয়ারি সংখ্যা...</p>
-        <a class="read-btn" href="#">Read More</a>
+  <!-- NEWS -->
+  <section id="news" class="news-section">
+    <h2>সংবাদ | NEWS PORTAL</h2>
+    <p class="section-sub">Latest literary & cultural updates</p>
+
+    <div class="news-grid">
+      <div class="news-card">
+        <div class="news-img"></div>
+        <div class="news-content">
+          <h3>অক্ষরপত্রের নতুন সংখ্যা প্রকাশ</h3>
+          <p>নতুন কবিতা, প্রবন্ধ ও গল্প নিয়ে হাজির হলো...</p>
+          <a class="read-btn" href="#">Read More</a>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-img"></div>
+        <div class="news-content">
+          <h3>কবিতা পাঠ অনুষ্ঠান</h3>
+          <p>রাজধানীতে আয়োজিত সাহিত্য সন্ধ্যায়...</p>
+          <a class="read-btn" href="#">Read More</a>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-img"></div>
+        <div class="news-content">
+          <h3>ইসলামী সাহিত্য গবেষণা অগ্রগতি</h3>
+          <p>আধুনিক গবেষণা কর্মের নতুন অধ্যায়...</p>
+          <a class="read-btn" href="#">Read More</a>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="news-card">
-      <div class="news-img"></div>
-      <div class="news-content">
-        <h3>কবিতা পাঠ অনুষ্ঠান</h3>
-        <p>রাজধানীতে আয়োজিত সাহিত্য সন্ধ্যায় তরুণ কবিদের অংশগ্রহণ...</p>
-        <a class="read-btn" href="#">Read More</a>
-      </div>
+  <!-- Featured Writings -->
+  <section id="writings" class="featured">
+    <h2 class="animated-title">সাম্প্রতিক লেখনী | RECENT WRITINGS</h2>
+    <p class="section-sub">Shining voices of the new generation</p>
+
+    <div class="scroll-container">
+      <div class="writing-card"><div class="tag">প্রবন্ধ</div><h3>নিস্তব্ধতার ভাঁজে</h3><p>শহরের শব্দ থেমে গেলে...</p></div>
+      <div class="writing-card"><div class="tag">গদ্য</div><h3>বইয়ের গন্ধ</h3><p>ফিকে কাগজ, কালির স্মৃতি...</p></div>
+      <div class="writing-card"><div class="tag">কবিতা</div><h3>রাত্রির গল্প</h3><p>নক্ষত্রের মতো ছড়িয়ে থাকা...</p></div>
+      <div class="writing-card"><div class="tag">প্রবন্ধ</div><h3>নতুন ভোর</h3><p>শব্দেরা কখনো ঘুমায় না...</p></div>
     </div>
-
-    <div class="news-card">
-      <div class="news-img"></div>
-      <div class="news-content">
-        <h3>ইসলামী সাহিত্য গবেষণা অগ্রগতি</h3>
-        <p>বাংলা ইসলামী সাহিত্যের আধুনিক পর্যায়ের নতুন গবেষণা কর্ম...</p>
-        <a class="read-btn" href="#">Read More</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-  
-
-<section id="writings" class="featured">
-  <h2 class="animated-title">সাম্প্রতিক লেখনী | RECENT WRITINGS</h2>
-  <p class="section-sub">Shining voices of the new generation</p>
-
-  <div class="scroll-container">
-    <!-- 1st set -->
-    <div class="writing-card"><div class="tag">প্রবন্ধ</div><h3>নিস্তব্ধতার ভাঁজে</h3><p>শহরের শব্দ থেমে গেলে যে নীরবতা জন্ম নেয়...</p></div>
-    <div class="writing-card"><div class="tag">গদ্য</div><h3>বইয়ের গন্ধ</h3><p>ফিকে কাগজ, কালির স্মৃতি, পৃথিবীর সবচেয়ে প্রিয় সুবাস...</p></div>
-    <div class="writing-card"><div class="tag">কবিতা</div><h3>রাত্রির গল্প</h3><p>আকাশের নক্ষত্রের মতো ছড়িয়ে থাকা কিছু কথা...</p></div>
-    <div class="writing-card"><div class="tag">প্রবন্ধ</div><h3>নতুন ভোর</h3><p>শব্দেরা কখনো ঘুমায় না — তারা জেগে থাকে বিশ্বাসের প্রহরায়।</p></div>
-
-    <!-- Duplicate for continuous scroll -->
-    <div class="writing-card"><div class="tag">প্রবন্ধ</div><h3>নিস্তব্ধতার ভাঁজে</h3><p>শহরের শব্দ থেমে গেলে যে নীরবতা জন্ম নেয়...</p></div>
-    <div class="writing-card"><div class="tag">গদ্য</div><h3>বইয়ের গন্ধ</h3><p>ফিকে কাগজ, কালির স্মৃতি, পৃথিবীর সবচেয়ে প্রিয় সুবাস...</p></div>
-    <div class="writing-card"><div class="tag">কবিতা</div><h3>রাত্রির গল্প</h3><p>আকাশের নক্ষত্রের মতো ছড়িয়ে থাকা কিছু কথা...</p></div>
-    <div class="writing-card"><div class="tag">প্রবন্ধ</div><h3>নতুন ভোর</h3><p>শব্দেরা কখনো ঘুমায় না — তারা জেগে থাকে বিশ্বাসের প্রহরায়।</p></div>
-  </div>
-</section>
-
+  </section>
 
   <!-- Lokkho -->
   <section id="lokkho">
-    
     <h2>লক্ষ্য | LOKKHO</h2>
     <div class="text-block">
-      শব্দের অতলান্তিক মিছিলের নেতৃত্বে বিশ্ব দরবারে ইসলামী বাংলা ভাষা ও সাহিত্যকে উঁচিয়ে ধরা
-      এবং অভেদ্য লেখনীর দূর্গ গড়ে ত্বাগূতের শিরঃপাত।
+      ইসলামী বাংলা সাহিত্যকে বিশ্ব দরবারে উঁচিয়ে ধরা এবং লেখনীর দূর্গ গড়ে ত্বাগূতের শিরঃপাত।
     </div>
   </section>
-  
 
   <!-- Uddesho -->
   <section id="uddesho">
     <h2>উদ্দেশ্য | UDDESSO</h2>
     <div class="text-block">
-      আল্লাহর সন্তুষ্টি, বিশ্বব্যাপী ইসলামী সাহিত্যের প্রচার প্রসার ও সাহিত্যের অপচর্চা রোধ করে
-      সংস্কৃতিতে ইসলামী খেলাফত প্রতিষ্ঠায় ভূমিকা রাখা।
+      আল্লাহর সন্তুষ্টি, বিশ্বব্যাপী ইসলামী সাহিত্যের প্রচার ও অপচর্চা রোধ।
     </div>
   </section>
 
@@ -140,36 +603,32 @@
   <section id="songkolpo">
     <h2>সংকল্প | SONGKOLPO</h2>
     <div class="text-block">
-      শহর-নগর থেকে শুরু করে দেশের প্রান্তিক অঞ্চল পর্যন্ত লাইব্রেরী প্রতিষ্ঠা, পাঠচক্র পরিচালনা,
-      ম্যাগাজিন প্রকাশ, পুস্তক প্রকাশনা, সংবাদমাধ্যম ও শিল্প-সাহিত্যে ইসলামকে সমৃদ্ধময় করা।
+      লাইব্রেরি, পাঠচক্র, ম্যাগাজিন প্রকাশনা ও সাহিত্যিক অগ্রযাত্রা।
     </div>
   </section>
-  
 
   <!-- Join -->
   <section id="join">
     <h2>যুক্ত হোন | JOIN US</h2>
     <div class="text-block">
-      আপনি যদি শব্দের কারিগর হন — কবি, লেখক, বা পাঠপ্রেমী — অক্ষরপত্র আপনাকে আহ্বান জানায়।
-      যুক্ত হোন আমাদের সাহিত্যিক যাত্রায়, সংস্কারের পথে একসাথে হাঁটতে।
+      আপনি যদি শব্দের কারিগর হন — অক্ষরপত্র আপনাকে আহ্বান জানায়।
     </div>
-    <a href="mailto:" class="btn">যোগ দিন | JOIN NOW</a>
+    <a href="mailto:" class="btn">JOIN NOW</a>
   </section>
 
+  <!-- Donate -->
   <section id="donate">
-  <h2>অনুদান | DONATE</h2>
-  <div class="text-block">
-    প্রতিটি সমর্থন আমাদের সাহিত্যিক আলোর পথ আরও দীপ্ত করে।  
-    আপনার অনুদান শব্দের সেতু নির্মাণে সহায়ক হবে।
-  </div>
+    <h2>অনুদান | DONATE</h2>
+    <div class="text-block">
+      প্রতিটি সমর্থন আমাদের আলোর পথ দীপ্ত করে।
+    </div>
 
-  <button class="btn donate-btn" id="donateReveal">অনুদান করুন | DONATE NOW</button>
+    <button class="btn donate-btn" id="donateReveal">অনুদান করুন</button>
 
-  <div id="donateNumber" class="donate-number">
-    📞 অনুদানের নম্বর: <strong>+880XXXXXXXXXX</strong>
-  </div>
-</section>
-
+    <div id="donateNumber" class="donate-number">
+      📞 অনুদানের নম্বর: <strong>+880XXXXXXXXXX</strong>
+    </div>
+  </section>
 
   <!-- About -->
   <section id="about">
@@ -182,14 +641,114 @@
     <h2>যোগাযোগ | CONTACT</h2>
     <div class="text-block">
       📧 <a href="mailto:" style="color:var(--accent)">okkhropotro@gmail.com</a><br>
-      🌐 <a href="https://github.com/" target="_blank" style="color:var(--accent2)">GitHub</a> |
-      <a href="#" style="color:var(--accent2)">Facebook</a> |
-      <a href="#" style="color:var(--accent2)">X (Twitter)</a>
+      🌐 GitHub | Facebook | X (Twitter)
     </div>
   </section>
+  <!-- Floating Theme Toggle -->
+<!-- Floating Emoji Theme Toggle -->
+<button id="emojiThemeBtn" class="emoji-theme-btn">🌙</button>
 
-  <footer>© <span id="year"></span> অক্ষরপত্র | OKKHORPOTRO — সমাজ সংস্কারে সাহিত্যের অতন্দ্র প্রহরী</footer>
 
-  <script src="scripts.js"></script>
+  <footer>© <span id="year"></span> অক্ষরপত্র | OKKHORPOTRO</footer>
+
+  <!-- JS MERGED -->
+  <script>
+    (function(){
+      // Floating letters positioning
+      document.querySelectorAll('.floating-letters span').forEach(s=>{
+        s.style.left=Math.random()*100+'vw';
+        s.style.animationDelay=Math.random()*-25+'s';
+      });
+
+      // Auto year
+      const y=document.getElementById('year');
+      if(y) y.textContent=new Date().getFullYear();
+
+      // Scroll fade-in
+      const observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('visible');
+          }
+        });
+      },{threshold:0.1});
+      document.querySelectorAll('section').forEach(s=>observer.observe(s));
+    })();
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+      const hamburger = document.getElementById("hamburger");
+      const sideMenu = document.getElementById("sideMenu");
+      const overlay = document.getElementById("menuOverlay");
+
+      if (hamburger && sideMenu && overlay) {
+        // Open / Close
+        hamburger.onclick = () => {
+          sideMenu.classList.toggle("show");
+          hamburger.classList.toggle("active");
+          overlay.classList.toggle("show");
+        };
+
+        // Close when clicking any menu link
+        sideMenu.querySelectorAll("a").forEach(link => {
+          link.onclick = () => {
+            sideMenu.classList.remove("show");
+            hamburger.classList.remove("active");
+            overlay.classList.remove("show");
+          };
+        });
+
+        // Close on overlay click
+        overlay.onclick = () => {
+          sideMenu.classList.remove("show");
+          hamburger.classList.remove("active");
+          overlay.classList.remove("show");
+        };
+      }
+    });
+
+    // Donation reveal
+    const donateBtn = document.getElementById("donateReveal");
+    const donateNumber = document.getElementById("donateNumber");
+
+    if (donateBtn && donateNumber) {
+      donateBtn.addEventListener("click", () => {
+        donateNumber.style.display = "block";
+        donateBtn.textContent = "ধন্যবাদ! | THANK YOU";
+      });
+    }
+
+// Emoji Theme Toggle Button
+const emojiBtn = document.getElementById("emojiThemeBtn");
+
+// Load saved theme
+if (localStorage.getItem("theme") === "dark") {
+  document.documentElement.classList.add("dark");
+  emojiBtn.textContent = "🌞";
+}
+
+// Toggle theme
+emojiBtn.addEventListener("click", () => {
+  const dark = document.documentElement.classList.toggle("dark");
+  emojiBtn.textContent = dark ? "🌞" : "🌙";
+  localStorage.setItem("theme", dark ? "dark" : "light");
+});
+
+// Submenu toggle logic
+document.querySelectorAll('.submenu-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const menu = btn.nextElementSibling;
+    const isOpen = menu.style.display === "flex";
+
+    // Close all open submenus
+    document.querySelectorAll('.submenu').forEach(s => s.style.display = "none");
+
+    // Toggle current
+    menu.style.display = isOpen ? "none" : "flex";
+  });
+});
+
+  </script>
+
 </body>
 </html>
