@@ -12,11 +12,7 @@
 /* ===========================
    Global Theme
 =========================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   height: 100vh;
@@ -27,7 +23,6 @@ body {
   justify-content: center;
 }
 
-/* Subtle pattern */
 body::before {
   content: "";
   position: fixed;
@@ -37,9 +32,7 @@ body::before {
   pointer-events: none;
 }
 
-/* ===========================
-   Login Container (Hybrid Premium)
-=========================== */
+/* Card */
 .auth-card {
   width: 420px;
   padding: 40px 34px;
@@ -47,14 +40,8 @@ body::before {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 28px;
   backdrop-filter: blur(22px);
-  
-  /* Neumorphism hybrid */
-  box-shadow:
-    20px 20px 40px rgba(0,0,0,0.45),
-    inset 2px 2px 6px rgba(255,255,255,0.08),
-    inset -2px -2px 6px rgba(0,0,0,0.4);
-
-  animation: popUp .5s cubic-bezier(0.32, 1.2, 0.32, 1);
+  box-shadow: 20px 20px 40px rgba(0,0,0,0.45);
+  animation: popUp .5s ease;
   color: #f0eada;
 }
 
@@ -63,44 +50,30 @@ body::before {
   100% { transform: scale(1); opacity: 1; }
 }
 
-.auth-card h1 {
+h1 {
   font-size: 36px;
-  font-weight: 700;
   color: #d6a18b;
-  margin-bottom: 8px;
   text-align: center;
 }
 
-.auth-card p.subtitle {
-  text-align: center;
+.subtitle {
   color: #9fb3a7;
+  text-align: center;
   margin-bottom: 25px;
 }
 
-/* ===========================
-   Inputs
-=========================== */
+/* Inputs */
 input {
   width: 100%;
   padding: 14px;
   margin: 10px 0;
   border-radius: 14px;
   border: none;
-  font-size: 17px;
-  outline: none;
   background: rgba(255,255,255,0.85);
-  color: #222;
-  transition: .25s;
+  font-size: 17px;
 }
 
-input:focus {
-  background: white;
-  box-shadow: 0 0 0 3px #a2352a55;
-}
-
-/* ===========================
-   Buttons (Hybrid)
-=========================== */
+/* Buttons */
 .btn {
   width: 100%;
   padding: 14px;
@@ -109,75 +82,56 @@ input:focus {
   font-size: 17px;
   font-weight: 600;
   cursor: pointer;
-  transition: .25s;
+  margin-top: 12px;
 }
 
-.btn-primary {
-  background: #a2352a;
-  color: white;
-  margin-top: 10px;
-}
-.btn-primary:hover {
-  background: #872b23;
-}
+.btn-primary { background: #a2352a; color: white; }
+.btn-primary:hover { background: #872b23; }
 
 .btn-secondary {
   background: #4e6e5d;
   color: white;
-  margin-top: 12px;
-  display: none;
+  display: none;  
 }
-.btn-secondary:hover {
-  background: #3e584b;
+.btn-secondary:hover { background: #3e584b; }
+
+/* Google Button */
+.google-btn {
+  background: #fff;
+  color: #333;
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 }
 
-/* ===========================
-   Switch Link
-=========================== */
+.google-btn:hover { background: #f5f5f5; }
+
+/* Switch */
 #switchText {
   margin-top: 16px;
-  color: #c6c6c6;
   text-align: center;
+  color: #c6c6c6;
 }
-#switchText span {
+
+#switchToSignup,
+#switchToLogin {
   cursor: pointer;
   color: #ffda75;
   font-weight: 600;
 }
 
-/* Smooth Fade */
-.fade {
-  animation: fade .4s ease;
+#switchToLogin {
+  display: none;
 }
-@keyframes fade {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.google-btn {
-  background: #ffffff;
-  color: #333;
-  border: 1px solid rgba(255,255,255,0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 18px;
-}
-
-.google-btn:hover {
-  background: #f5f5f5;
-}
-
 </style>
 
 </head>
 
 <body>
 
-<!-- ===========================
-     AUTH CARD
-=========================== -->
-<div class="auth-card fade">
+<div class="auth-card">
   <h1 id="formTitle">লগ ইন</h1>
   <p class="subtitle">আপনার যাত্রা শুরু করুন</p>
 
@@ -185,28 +139,33 @@ input:focus {
   <input id="password" type="password" placeholder="Password">
 
   <button id="loginBtn" class="btn btn-primary">Log In</button>
-  <button id="googleBtn" class="btn google-btn">
-  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
-       style="width:22px; margin-right:8px;">
-  Continue with Google
-</button>
-
   <button id="signupBtn" class="btn btn-secondary">Create Account</button>
 
+  <button id="googleBtn" class="btn google-btn">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:22px;">
+    Continue with Google
+  </button>
+
   <p id="switchText">
-    নতুন অ্যাকাউন্ট লাগবে? <span id="switchToSignup">Sign Up</span>
+    নতুন অ্যাকাউন্ট লাগবে? 
+    <span id="switchToSignup">Sign Up</span>
+    <span id="switchToLogin">Log In</span>
   </p>
 </div>
 
+
 <!-- ===========================
-     FIREBASE LOGIC
+     FIREBASE
 =========================== -->
 <script type="module">
+/* Firebase Imports */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { 
   getAuth, 
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
 /* Firebase Config */
@@ -224,71 +183,68 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 /* Elements */
-const emailField = document.getElementById("email");
-const passField = document.getElementById("password");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+
 const loginBtn = document.getElementById("loginBtn");
 const signupBtn = document.getElementById("signupBtn");
-const formTitle = document.getElementById("formTitle");
-const switchText = document.getElementById("switchText");
-const switchToSignup = document.getElementById("switchToSignup");
-
-let mode = "login";
-
-/* LOGIN */
-signInWithEmailAndPassword(auth, emailField.value, passField.value)
-  .then(() => window.location.href = "dashboard.html")
-  .catch(err => alert(err.message));
-
-/* SIGNUP */
-createUserWithEmailAndPassword(auth, emailField.value, passField.value)
-  .then(() => {
-    window.location.href = "dashboard.html";
-  })
-  .catch(err => alert(err.message));
-googleBtn.onclick = () => {
-  signInWithPopup(auth, provider)
-    .then(() => window.location.href = "dashboard.html")
-    .catch(err => alert(err.message));
-};
-
-
-/* SWITCH UI */
-switchToSignup.onclick = () => {
-  mode = "signup";
-  formTitle.innerText = "অ্যাকাউন্ট তৈরি";
-  loginBtn.style.display = "none";
-  signupBtn.style.display = "block";
-
-  switchText.innerHTML = `আগে অ্যাকাউন্ট আছে? <span id="backToLogin">Log In</span>`;
-  document.getElementById("backToLogin").onclick = switchToLogin;
-};
-
-function switchToLogin() {
-  mode = "login";
-  formTitle.innerText = "লগ ইন";
-  loginBtn.style.display = "block";
-  signupBtn.style.display = "none";
-
-  switchText.innerHTML = `নতুন অ্যাকাউন্ট লাগবে? <span id="switchToSignup">Sign Up</span>`;
-  document.getElementById("switchToSignup").onclick = switchToSignup;
-}
 const googleBtn = document.getElementById("googleBtn");
+
+const formTitle = document.getElementById("formTitle");
+const switchToSignup = document.getElementById("switchToSignup");
+const switchToLogin = document.getElementById("switchToLogin");
+
+/* -------------------
+   LOGIN
+------------------- */
+loginBtn.onclick = () => {
+  signInWithEmailAndPassword(auth, email.value, password.value)
+    .then(() => window.location.href = "dashboard.html")
+    .catch(e => alert(e.message));
+};
+
+/* -------------------
+   SIGNUP
+------------------- */
+signupBtn.onclick = () => {
+  createUserWithEmailAndPassword(auth, email.value, password.value)
+    .then(() => window.location.href = "dashboard.html")
+    .catch(e => alert(e.message));
+};
+
+/* -------------------
+   GOOGLE SIGN-IN
+------------------- */
 const provider = new GoogleAuthProvider();
 
 googleBtn.onclick = () => {
   signInWithPopup(auth, provider)
-    .then(result => {
-      // Google account info (if needed)
-      const user = result.user;
-
-      // Redirect to articles page
-      window.location.href = "articles.html";
-    })
-    .catch(error => {
-      alert(error.message);
-    });
+    .then(() => window.location.href = "dashboard.html")
+    .catch(e => alert(e.message));
 };
 
+/* -------------------
+   SWITCH UI
+------------------- */
+switchToSignup.onclick = () => {
+  formTitle.innerText = "অ্যাকাউন্ট তৈরি";
+
+  loginBtn.style.display = "none";
+  signupBtn.style.display = "block";
+
+  switchToSignup.style.display = "none";
+  switchToLogin.style.display = "inline";
+};
+
+switchToLogin.onclick = () => {
+  formTitle.innerText = "লগ ইন";
+
+  loginBtn.style.display = "block";
+  signupBtn.style.display = "none";
+
+  switchToSignup.style.display = "inline";
+  switchToLogin.style.display = "none";
+};
 </script>
 
 </body>
