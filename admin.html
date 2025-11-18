@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | OKKHORPOTRYA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* -------------------------------------------------------
+   GLOBAL CLEAN THEME
+--------------------------------------------------------*/
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter",sans-serif;
+}
+
+body{
+  background:#eef2f7;
+  color:#111;
+}
+
+/* -------------------------------------------------------
+   ACCESS CARD
+--------------------------------------------------------*/
+#gateOverlay{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:rgba(255,255,255,0.4);
+  backdrop-filter:blur(6px);
+  z-index:1000;
+}
+
+.gate-card{
+  width:360px;
+  padding:36px;
+  background:white;
+  border-radius:16px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.08);
+  text-align:center;
+}
+
+.gate-input{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
+  border-radius:10px;
+  margin-top:14px;
+}
+
+.gate-btn{
+  width:100%;
+  padding:12px;
+  background:#1f2937;
+  color:white;
+  border:none;
+  border-radius:10px;
+  margin-top:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+#gateError{
+  margin-top:10px;
+  color:#d00;
+}
+
+/* -------------------------------------------------------
+   DASHBOARD
+--------------------------------------------------------*/
+#dashboardWrapper{ display:none; }
+
+.topbar{
+  height:60px;
+  background:white;
+  border-bottom:1px solid #ddd;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 20px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.03);
+}
+
+.sidebar{
+  width:220px;
+  background:#1f2937;
+  height:100vh;
+  position:fixed;
+  top:60px;
+  left:0;
+  padding-top:14px;
+}
+
+.sidebar button{
+  width:100%;
+  padding:14px 20px;
+  color:#cbd5e1;
+  background:none;
+  border:none;
+  text-align:left;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.sidebar button:hover{
+  background:#273449;
+  color:white;
+}
+
+.sidebar button.active{
+  background:#3b82f6;
+  color:white;
+}
+
+#contentArea{
+  margin-left:220px;
+  padding:30px;
+}
+
+.card{
+  background:white;
+  padding:28px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.06);
+  max-width:760px;
+}
+
+.input{
+  width:100%;
+  padding:12px;
+  border:1px solid #d2d6dd;
+  border-radius:8px;
+  margin:12px 0;
+}
+
+textarea.input{
+  min-height:180px;
+}
+
+.button{
+  background:#1f2937;
+  color:white;
+  padding:12px 18px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.button:hover{
+  background:#111827;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gateOverlay">
+  <div class="gate-card">
+    <h2>Admin Access</h2>
+    <input id="gateInput" type="password" class="gate-input" placeholder="Enter Security Key">
+    <button id="gateSubmit" class="gate-btn">Enter</button>
+    <div id="gateError"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboardWrapper">
+
+  <div class="topbar">
+    <div style="font-weight:600;font-size:17px;">OKKHORPOTRYA — Admin</div>
+    <button id="logoutBtn" class="button" style="background:#b91c1c;">Logout</button>
+  </div>
+
+  <div class="sidebar">
+    <button id="menu-dashboard">📊 Dashboard</button>
+    <button id="menu-new">📝 New Article</button>
+    <button id="menu-manage">📚 Manage Articles</button>
+  </div>
+
+  <div id="contentArea"></div>
+</div>
+
+<!-- UI SCRIPT (your original logic, untouched) -->
+<script>
+window.onload = () => {
+
+  const gate = document.getElementById("gateOverlay");
+  const input = document.getElementById("gateInput");
+  const btn = document.getElementById("gateSubmit");
+  const dash = document.getElementById("dashboardWrapper");
+  const err = document.getElementById("gateError");
+
+  const correctKey = "1";
+
+  btn.onclick = () => {
+    if(input.value.trim() === correctKey){
+      gate.style.display = "none";
+      dash.style.display = "block";
+    } else err.textContent = "Incorrect key ❌";
+  };
+
+  const contentArea = document.getElementById("contentArea");
+
+  function activate(btn){
+    document.querySelectorAll(".sidebar button")
+    .forEach(x => x.classList.remove("active"));
+    btn.classList.add("active");
+  }
+
+  // DASHBOARD – REAL PROFILE
+  document.getElementById("menu-dashboard").onclick = () => {
+    activate(document.getElementById("menu-dashboard"));
+
+    const user = JSON.parse(localStorage.getItem("loggedUser")) || {
+      displayName: "Unknown",
+      email: "Unknown",
+      uid: "Unknown",
+      photoURL: ""
+    };
+
+    contentArea.innerHTML = `
+      <div class="card">
+        <h2>👤 Profile Information</h2>
+        ${user.photoURL ? `<img src="${user.photoURL}" style="width:80px;height:80px;border-radius:50%;margin-bottom:12px;">` : ""}
+        <p><b>Name:</b> ${user.displayName}</p>
+        <p><b>Email:</b> ${user.email}</p>
+        <p><b>UID:</b> ${user.uid}</p>
+      </div>
+    `;
+  };
+
+  // NEW ARTICLE
+  document.getElementById("menu-new").onclick = () => {
+    activate(document.getElementById("menu-new"));
+
+    contentArea.innerHTML = `
+      <div class="card">
+        <h2 style="margin-bottom:12px;">✏️ Publish New Article</h2>
+
+        <label><b>Category</b></label>
+        <select id="articleCategory" class="input">
+          <option value="">Select category</option>
+          <option value="poem">📜 Poem</option>
+          <option value="golpo">📘 Golpo</option>
+          <option value="probondho">📝 Probondho</option>
+          <option value="others">🎭 Others</option>
+        </select>
+
+        <label><b>Thumbnail Image</b></label>
+        <input type="file" id="articleThumbnail" class="input">
+
+        <label><b>Title</b></label>
+        <input type="text" id="articleTitle" class="input">
+
+        <label><b>Content</b></label>
+        <textarea id="articleContent" class="input"></textarea>
+
+        <button id="publishArticle" class="button">Publish</button>
+      </div>
+    `;
+  };
+
+  // MANAGE ARTICLES
+  document.getElementById("menu-manage").onclick = () => {
+    activate(document.getElementById("menu-manage"));
+    loadArticles();
+  };
+
+};
+</script>
+
+<!-- FIREBASE MODULE SCRIPT -->
+<script type="module">
+
+/* ---------------------------
+      FIREBASE IMPORTS
+----------------------------*/
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { 
+  getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { 
+  getStorage, ref, uploadBytes, getDownloadURL 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+import { 
+  getAuth, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+/* ---------------------------
+      FIREBASE CONFIG
+----------------------------*/
+const firebaseConfig = {
+  apiKey: "AIzaSyCnFgBxGYqkMkYCTCbPPJzo8fbbZmylcHY",
+  authDomain: "okkhorpotrya.firebaseapp.com",
+  projectId: "okkhorpotrya",
+  storageBucket: "okkhorpotrya.firebasestorage.app",
+  messagingSenderId: "401210408956",
+  appId: "1:401210408956:web:958c0361306121244bbc79",
+  measurementId: "G-VN5XLFYH8P"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const auth = getAuth(app);
+
+/* ---------------------------
+    REAL-TIME AUTH PROTECTION
+----------------------------*/
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  localStorage.setItem("loggedUser", JSON.stringify({
+    displayName: user.displayName || "",
+    email: user.email || "",
+    uid: user.uid,
+    photoURL: user.photoURL || ""
+  }));
+});
+
+/* ---------------------------
+      LOGOUT
+----------------------------*/
+document.getElementById("logoutBtn").onclick = async () => {
+  await signOut(auth);
+  localStorage.removeItem("loggedUser");
+  window.location.href = "login.html";
+};
+
+/* ---------------------------
+      PUBLISH ARTICLE
+----------------------------*/
+document.addEventListener("click", async (e) => {
+  if (e.target.id === "publishArticle") {
+
+    const title = document.getElementById("articleTitle").value.trim();
+    const content = document.getElementById("articleContent").value.trim();
+    const category = document.getElementById("articleCategory").value.trim();
+    const file = document.getElementById("articleThumbnail").files[0];
+
+    if (!title || !content || !file || !category) {
+      alert("Please fill all fields!");
+      return;
+    }
+
+    const imgRef = ref(storage, "thumbs/" + Date.now() + "_" + file.name);
+    await uploadBytes(imgRef, file);
+    const imgURL = await getDownloadURL(imgRef);
+
+    await addDoc(collection(db, "articles"), {
+      title,
+      content,
+      category,
+      thumbnailURL: imgURL,
+      status: "pending",
+      createdAt: Date.now()
+    });
+
+    alert("Article submitted successfully!");
+  }
+});
+
+/* ---------------------------
+      LOAD ARTICLES
+----------------------------*/
+window.loadArticles = async () => {
+  const contentArea = document.getElementById("contentArea");
+  const docs = await getDocs(collection(db, "articles"));
+
+  let html = "";
+  docs.forEach(d => {
+    const a = d.data();
+
+    html += `
+      <div style="
+        background:#f1f5f9;
+        padding:14px;
+        border-radius:10px;
+        margin-bottom:12px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+      ">
+        <div style="display:flex; gap:12px;">
+          <img src="${a.thumbnailURL}" style="width:60px;height:60px;border-radius:6px;">
+          <div>
+            <b>${a.title}</b><br>
+            <small>Category: ${a.category}</small><br>
+            <small>Status: ${a.status}</small><br>
+            <small>${new Date(a.createdAt).toLocaleString()}</small>
+          </div>
+        </div>
+
+        <div>
+          ${a.status === "pending" ? `
+            <button class="button" style="padding:6px 10px;background:#16a34a;"
+              onclick="publishArticle('${d.id}')">Publish</button>
+          ` : `<span style="color:#16a34a;font-weight:600;">Published</span>`}
+
+          <button class="button" style="padding:6px 10px;background:#b91c1c;margin-left:6px;"
+            onclick="deleteArticle('${d.id}')">Delete</button>
+        </div>
+
+      </div>
+    `;
+  });
+
+  contentArea.innerHTML = `
+    <div class="card">
+      <h2>📚 Manage Articles</h2>
+      <div style="margin-top:20px;">${html}</div>
+    </div>
+  `;
+};
+
+/* ---------------------------
+      PUBLISH ACTION
+----------------------------*/
+window.publishArticle = async (id) => {
+  await updateDoc(doc(db, "articles", id), { status:"published" });
+  loadArticles();
+};
+
+/* ---------------------------
+      DELETE ARTICLE
+----------------------------*/
+window.deleteArticle = async (id) => {
+  if (!confirm("Delete this article?")) return;
+  await deleteDoc(doc(db, "articles", id));
+  loadArticles();
+};
+
+</script>
+
+</body>
+</html>
