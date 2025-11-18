@@ -13,264 +13,290 @@
 <style>
 
 /* ============================================================
-   1) GLOBAL RESET + TYPOGRAPHY
+   GLOBAL — Apple smoothness & depth
 ============================================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* ============================================================
-   2) BACKGROUND – SOFT SHIMMER MINIMAL (Option C)
-============================================================ */
 body {
-  background: linear-gradient(135deg, #fafafa, #f1f1f1, #ffffff);
-  background-size: 300% 300%;
-  animation: subtleShimmer 18s ease infinite;
+  background: linear-gradient(135deg, rgba(245,245,247,1), rgba(255,255,255,1));
+  backdrop-filter: blur(20px);
+  min-height: 100vh;
   color: #111;
+  transition: background 0.5s ease, color 0.5s ease;
+  overflow-x: hidden;
 }
 
-@keyframes subtleShimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* Apple ambient floating light */
+body::before {
+  content: "";
+  position: fixed;
+  top: -10%;
+  left: -10%;
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(255,255,255,0.7), transparent 70%);
+  filter: blur(80px);
+  z-index: -1;
+  animation: appleGlow 14s infinite alternate ease-in-out;
+}
+@keyframes appleGlow {
+  from { transform: translate(0,0); }
+  to   { transform: translate(10%, 10%); }
 }
 
 /* ============================================================
-   3) TERMINAL HACKER INTRO (green neon typing)
+   TERMINAL UPGRADE — clean CRT glow (still hacker vibe)
 ============================================================ */
-
 #terminalScreen {
   position: fixed;
   inset: 0;
   background: #000;
-  color: #00ff66;
+  color: #00ff88;
+  font-family: "SF Mono", monospace;
   padding: 30px;
-  font-family: monospace;
   white-space: pre-wrap;
   font-size: 16px;
   overflow-y: auto;
   z-index: 9999;
+  animation: fadeInTerminal 0.4s ease;
 }
 
-.terminal-line {
-  margin-bottom: 6px;
+#terminalScreen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,255,120,0.03) 0px,
+    rgba(0,255,120,0.03) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  pointer-events: none;
 }
 
-.blinkCursor {
-  display: inline-block;
-  width: 10px;
-  background:#00ff66;
-  margin-left: 2px;
-  animation: cursorBlink 0.7s infinite;
-}
-
-@keyframes cursorBlink {
-  0% { opacity: 1; }
-  50% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-/* Terminal input field */
-#terminalInput {
-  border: none;
-  background: transparent;
-  color: #00ff66;
-  font-family: monospace;
-  font-size: 16px;
-  outline: none;
-  width: 200px;
+@keyframes fadeInTerminal {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ============================================================
-   4) DASHBOARD WRAPPER (hidden until intro ends)
-============================================================ */
-#dashboardWrapper {
-  display: none;
-}
-
-/* ============================================================
-   5) TOPBAR
+   TOPBAR — Apple blurred glass
 ============================================================ */
 .topbar {
-  height: 60px;
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid #ddd;
-  padding: 0 20px;
+  height: 64px;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: saturate(180%) blur(22px);
+  border-bottom: 1px solid rgba(255,255,255,0.4);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 26px;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 50;
+  animation: fadeSlideDown 0.6s ease;
 }
-
-.topbar button {
-  margin-left: 8px;
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: none; }
 }
 
 /* ============================================================
-   6) SIDEBAR (desktop)
+   BUTTONS — Apple pill buttons + micro-interactions
+============================================================ */
+.button {
+  background: rgba(0,0,0,0.8);
+  border-radius: 12px;
+  padding: 10px 18px;
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+  transform: translateZ(0);
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   SIDEBAR — Apple floating sidebar
 ============================================================ */
 .sidebar {
-  width: 220px;
-  background: rgba(31, 41, 55, 0.95);
-  height: 100vh;
+  width: 240px;
   position: fixed;
-  top: 60px;
+  top: 64px;
   left: 0;
-  padding-top: 14px;
+  height: calc(100vh - 64px);
+  background: rgba(255,255,255,0.45);
+  backdrop-filter: blur(26px);
+  border-right: 1px solid rgba(255,255,255,0.4);
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
-  z-index: 20;
+  box-shadow: 12px 0 40px rgba(0,0,0,0.05);
+  animation: fadeSlideLeft 0.6s ease;
+}
+
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: none; }
 }
 
 .sidebar button {
-  width: 100%;
-  padding: 14px 20px;
-  background: none;
+  padding: 15px 20px;
+  color: #374151;
+  background: transparent;
   border: none;
   text-align: left;
-  color: #cbd5e1;
+  font-size: 15px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s ease;
 }
 
 .sidebar button:hover {
-  background: #273449;
-  color: white;
+  background: rgba(255,255,255,0.8);
+  color: #111;
 }
 
 .sidebar button.active {
   background: #3b82f6;
   color: white;
+  border-radius: 8px;
 }
 
 /* ============================================================
-   7) BOTTOM NAV (MOBILE)
+   MOBILE NAV — floating Apple dock style
 ============================================================ */
 .bottomNav {
   display: none;
 }
 
 @media (max-width: 770px) {
-
-  .sidebar {
-    display: none;
-  }
-
   .bottomNav {
     display: flex;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: rgba(31,41,55,0.95);
-    backdrop-filter: blur(6px);
-    z-index: 30;
-
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(24px);
+    height: 62px;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    z-index: 50;
     justify-content: space-around;
     align-items: center;
+    animation: dockFade 0.6s ease;
   }
 
-  .bottomNav button {
-    background: none;
-    border: none;
-    color: #cbd5e1;
-    font-size: 22px;
-    cursor: pointer;
+  @keyframes dockFade {
+    from { opacity: 0; transform: translate(-50%,20px); }
+    to   { opacity: 1; transform: translate(-50%,0); }
   }
 
   #contentArea {
     margin-left: 0 !important;
-    margin-bottom: 80px;
+    margin-bottom: 100px;
   }
 }
 
 /* ============================================================
-   8) CONTENT AREA + CARDS
+   CONTENT — Apple card floating
 ============================================================ */
 #contentArea {
-  margin-left: 220px;
+  margin-left: 240px;
   padding: 30px;
+  transition: 0.3s ease;
 }
 
 .card {
-  background: white;
+  background: rgba(255,255,255,0.68);
+  backdrop-filter: blur(26px);
+  border: 1px solid rgba(255,255,255,0.4);
   padding: 28px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  max-width: 760px;
-  animation: fadeIn 0.3s ease;
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.06);
+  animation: cardIn 0.4s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(8px) scale(.98); }
   to   { opacity: 1; transform: none; }
 }
 
 .input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #d2d6dd;
-  border-radius: 8px;
-  margin: 12px 0;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(180,180,180,0.4);
+  background: rgba(255,255,255,0.7);
+  transition: 0.25s ease;
 }
 
-.button {
-  background: #1f2937;
-  color: white;
-  padding: 12px 18px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
+.input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
 }
-.button:hover { background: #111827; }
 
 /* ============================================================
-   9) GLASS PROFILE CARD
+   PROFILE CARD — premium glass profile
 ============================================================ */
 .profileCard {
-  background: rgba(255,255,255,0.35);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.4);
-  padding: 30px;
-  border-radius: 16px;
-  max-width: 420px;
-  margin: auto;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(28px);
+  padding: 34px;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.08);
+  animation: cardIn 0.4s ease;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
 }
 
 /* ============================================================
-   10) DARK MODE
+   DARK MODE — Apple neutral black
 ============================================================ */
 body.dark {
-  background: #111;
-  color: #eee;
+  background: #000;
+  color: #e5e5e5;
 }
 
 body.dark .card,
 body.dark .profileCard {
-  background: rgba(30,30,30,0.7);
+  background: rgba(30,30,30,0.75);
   border-color: rgba(255,255,255,0.1);
-  color: #eee;
 }
 
 body.dark .sidebar {
-  background: rgba(15,15,15,0.95);
+  background: rgba(20,20,20,0.7);
 }
 
 body.dark .bottomNav {
-  background: rgba(15,15,15,0.95);
+  background: rgba(20,20,20,0.7);
 }
 
 </style>
+
+
 </head>
 
 <body>
