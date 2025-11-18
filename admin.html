@@ -3,335 +3,137 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Admin | OKKHORPOTRYA</title>
+<title>Admin | OKKHORPOTRYA — Revamp</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
 <!-- CHART JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
+:root{
+  --bg:#0f1724; /* deep navy */
+  --card:#0b1220;
+  --muted:#94a3b8;
+  --accent:#7c3aed; /* purple */
+  --accent-2:#06b6d4; /* teal */
+  --glass: rgba(255,255,255,0.04);
+  --glass-2: rgba(255,255,255,0.02);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+html,body{height:100%;}
+body{background:linear-gradient(180deg,#071028 0%, #071428 45%, #071028 100%);color:#e6eef8;overflow:hidden}
 
-/* ============================================================
-   GLOBAL — Premium minimal + modern
-============================================================ */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+/* Subtle animated gradient background */
+.background-blend{position:fixed;inset:0;z-index:-3;opacity:0.9;pointer-events:none;background:
+  radial-gradient(600px 600px at 10% 10%, rgba(124,58,237,0.08), transparent 12%),
+  radial-gradient(500px 500px at 90% 90%, rgba(6,182,212,0.06), transparent 12%);
+  animation: bgShift 18s ease-in-out infinite alternate;
+}
+@keyframes bgShift{from{transform:translateY(0) scale(1)}to{transform:translateY(-20px) scale(1.02)}}
+
+/* Floating particles */
+.particle{position:fixed;width:6px;height:6px;background:rgba(255,255,255,0.04);border-radius:50%;box-shadow:0 0 18px rgba(124,58,237,0.06);animation:floaty 12s linear infinite;}
+@keyframes floaty{0%{transform:translateY(0) translateX(0)}50%{transform:translateY(-40px) translateX(10px)}100%{transform:translateY(0) translateX(0)}}
+
+/* Topbar */
+.topbar{position:fixed;left:0;right:0;top:0;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.02);z-index:40}
+.topbar .brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:white}
+.topbar .controls{display:flex;gap:10px;align-items:center}
+.button{padding:8px 14px;border-radius:12px;border:none;background:rgba(255,255,255,0.03);color:var(--muted);cursor:pointer;font-weight:600;transition:all .22s ease}
+.button:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(2,6,23,0.6);color:#fff;background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02))}
+
+/* Sidebar */
+.sidebar{position:fixed;left:18px;top:86px;width:260px;background:linear-gradient(180deg,var(--glass),var(--glass-2));border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(8px);height:calc(100vh - 120px);overflow:auto;z-index:30}
+.sidebar button{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:transparent;border:none;color:var(--muted);width:100%;text-align:left;cursor:pointer;font-weight:600;transition:all .18s ease}
+.sidebar button:hover{background:linear-gradient(90deg,rgba(124,58,237,0.06),rgba(6,182,212,0.02));color:#fff;transform:translateX(6px)}
+.sidebar button.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;box-shadow:0 8px 30px rgba(6,182,212,0.06);}
+
+/* Content area */
+#contentArea{position:absolute;left:300px;right:24px;top:86px;bottom:24px;padding:24px;overflow:auto}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 36px rgba(2,6,23,0.6);margin-bottom:18px;animation:cardIn .35s ease both}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Profile card tweak */
+.profileCard{display:flex;gap:18px;align-items:center}
+.profileCard img{width:84px;height:84px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.04)}
+.profileCard .meta{line-height:1.2}
+.profileCard .meta b{display:block;font-size:18px}
+.profileCard .meta p{color:var(--muted);margin-top:6px}
+
+/* Inputs styled */
+.input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+.input:focus{outline:none;box-shadow:0 6px 28px rgba(124,58,237,0.06);border-color:rgba(124,58,237,0.6)}
+select.input{appearance:none;padding-right:36px}
+
+/* Terminal screen restyle but keep id */
+#terminalScreen{position:fixed;inset:0;background:linear-gradient(180deg,#02030a 0%, rgba(4,6,23,0.95) 100%);color:#bfeec0;font-family: 'SF Mono', ui-monospace, monospace;padding:36px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;z-index:60}
+#terminalOutput{width:100%;max-width:980px}
+#terminalInput{margin-top:14px;padding:12px;background:transparent;border:1px dashed rgba(255,255,255,0.04);color:inherit;border-radius:8px;width:420px}
+.blinkCursor{display:inline-block;width:10px;height:18px;background:linear-gradient(180deg,var(--accent),var(--accent-2));margin-left:8px;border-radius:3px;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* Mobile adjustments */
+@media (max-width:900px){
+  .sidebar{left:12px;top:86px;width:86px;padding:10px}
+  .sidebar button{justify-content:center;font-size:12px;padding:10px}
+  #contentArea{left:110px}
+}
+@media (max-width:600px){
+  .sidebar{display:none}
+  #contentArea{left:12px;padding-bottom:110px}
+  .topbar .brand .name{display:none}
+  .bottomNav{display:flex}
 }
 
-body {
-  background: #f7f8fa;
-  color: #1b1b1d;
-  transition: background .5s ease, color .4s ease;
-  overflow-x: hidden;
-}
+/* Small utility */
+.kv{display:flex;gap:10px;align-items:center}
+.badge{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03);font-weight:700;color:var(--muted)}
 
-/* Smooth global fade */
-@keyframes smoothFade {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: none; }
-}
-
-/* ============================================================
-   SOFT BACKGROUND LIGHT (modern aesthetic)
-============================================================ */
-body::before {
-  content: "";
-  position: fixed;
-  top: -15%;
-  right: -15%;
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, rgba(120,140,255,0.14), transparent 70%);
-  filter: blur(100px);
-  z-index: -2;
-  animation: drift 16s infinite alternate ease-in-out;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  bottom: -10%;
-  left: -10%;
-  width: 45vw;
-  height: 45vw;
-  background: radial-gradient(circle, rgba(255,150,150,0.15), transparent 70%);
-  filter: blur(110px);
-  z-index: -2;
-  animation: drift 18s infinite alternate-reverse ease-in-out;
-}
-
-@keyframes drift {
-  from { transform: translate(0,0); }
-  to   { transform: translate(20px, 30px); }
-}
-
-
-/* ============================================================
-   TERMINAL — clean, modern hacker effect
-============================================================ */
-#terminalScreen {
-  position: fixed;
-  inset: 0;
-  background: #0a0a0a;
-  color: #6cff8f;
-  font-family: "SF Mono", monospace;
-  padding: 30px;
-  overflow-y: auto;
-  z-index: 9999;
-  animation: smoothFade .5s ease;
-}
-
-#terminalScreen::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(rgba(0,0,0,0), rgba(0,255,120,0.03));
-  pointer-events: none;
-}
-
-.blinkCursor {
-  background: #6cff8f;
-}
-
-/* ============================================================
-   TOPBAR — premium flat design
-============================================================ */
-.topbar {
-  height: 64px;
-  background: #ffffffd8;
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid #e5e7eb;
-  padding: 0 26px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  animation: smoothFade .5s ease;
-}
-
-/* ============================================================
-   BUTTONS — modern micro-interaction
-============================================================ */
-.button {
-  padding: 10px 18px;
-  border-radius: 10px;
-  background: #1f1f1f;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.25s ease;
-  transform: translateZ(0);
-}
-
-.button:hover {
-  filter: brightness(1.15);
-  transform: translateY(-2px);
-}
-
-.button:active {
-  transform: scale(.97);
-}
-
-/* ============================================================
-   SIDEBAR — soft minimalist block
-============================================================ */
-.sidebar {
-  width: 230px;
-  height: calc(100vh - 64px);
-  position: fixed;
-  top: 64px;
-  left: 0;
-  padding-top: 20px;
-  background: #fff;
-  border-right: 1px solid #ececec;
-  animation: smoothFade .5s ease;
-}
-
-.sidebar button {
-  padding: 15px 22px;
-  width: 100%;
-  font-size: 15px;
-  background: none;
-  border: none;
-  color: #444;
-  text-align: left;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.sidebar button:hover {
-  background: #f0f2f6;
-  color: #111;
-}
-
-.sidebar button.active {
-  background: #3b82f6;
-  color: white;
-  border-radius: 8px;
-}
-
-/* ============================================================
-   MOBILE BOTTOM NAV — clean floating bar
-============================================================ */
-.bottomNav {
-  display: none;
-}
-
-@media (max-width: 770px) {
-  .sidebar { display: none; }
-
-  .bottomNav {
-    display: flex;
-    position: fixed;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    height: 64px;
-    background: white;
-    border-radius: 18px;
-    backdrop-filter: blur(16px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    z-index: 50;
-    justify-content: space-around;
-    align-items: center;
-    animation: smoothFade .5s ease;
-  }
-
-  #contentArea {
-    margin-left: 0 !important;
-    margin-bottom: 100px;
-  }
-}
-
-
-/* ============================================================
-   CONTENT AREA + CARDS — premium floating panels
-============================================================ */
-#contentArea {
-  margin-left: 230px;
-  padding: 32px;
-  animation: smoothFade .4s ease;
-}
-
-.card {
-  background: #ffffffeb;
-  backdrop-filter: blur(8px);
-  border-radius: 18px;
-  padding: 28px;
-  border: 1px solid #e8e8e8;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.06);
-  animation: smoothFade .4s ease;
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 40px rgba(0,0,0,0.10);
-}
-
-/* Inputs */
-.input {
-  width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: 1px solid #d0d3d8;
-  background: #fafafa;
-  transition: .2s;
-}
-
-.input:focus {
-  border-color: #3b82f6;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
-}
-
-/* ============================================================
-   PROFILE CARD — clean modern
-============================================================ */
-.profileCard {
-  background: #ffffffeb;
-  padding: 34px;
-  border-radius: 20px;
-  border: 1px solid #e8e8e8;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  animation: smoothFade .4s ease;
-}
-
-/* ============================================================
-   DARK MODE — clean pure dark (not ugly)
-============================================================ */
-body.dark {
-  background: #0f0f0f;
-  color: #e6e6e6;
-}
-
-body.dark .topbar {
-  background: rgba(20,20,20,0.92);
-  border-bottom-color: #222;
-}
-
-body.dark .sidebar {
-  background: #141414;
-  border-right-color: #222;
-}
-
-body.dark .sidebar button:hover {
-  background: #1f1f1f;
-}
-
-body.dark .card,
-body.dark .profileCard {
-  background: #141414;
-  border-color: #2a2a2a;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.4);
-}
-
-body.dark .input {
-  background: #1b1b1b;
-  border-color: #333;
-}
-
-body.dark .bottomNav {
-  background: #1b1b1b;
-}
+/* Button micro interactions */
+.iconBtn{width:44px;height:44px;border-radius:10px;display:inline-grid;place-items:center;border:1px solid rgba(255,255,255,0.02);background:transparent}
+.iconBtn:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,6,23,0.6)}
 
 </style>
-
 </head>
-
 <body>
+<div class="background-blend"></div>
+<!-- gentle particles (decorative) -->
+<div id="p1" class="particle" style="left:6%;top:20%;animation-duration:14s;width:8px;height:8px;"></div>
+<div id="p2" class="particle" style="left:22%;top:60%;animation-duration:11s;width:6px;height:6px;"></div>
+<div id="p3" class="particle" style="left:78%;top:28%;animation-duration:17s;width:5px;height:5px;"></div>
+<div id="p4" class="particle" style="left:56%;top:72%;animation-duration:13s;width:7px;height:7px;"></div>
 
 <!-- ============================================================
-     TERMINAL INTRO (HACKER)
+     TERMINAL INTRO (HACKER) — keep same id and behavior
 ============================================================ -->
 <div id="terminalScreen">
   <div id="terminalOutput"></div>
-  <input id="terminalInput" autocomplete="off" />
+  <input id="terminalInput" autocomplete="off" placeholder="Type admin key and press Enter" />
   <span class="blinkCursor"></span>
 </div>
 
-<!-- ============================================================
-     DASHBOARD WRAPPER
-============================================================ -->
-<div id="dashboardWrapper">
+<!-- DASHBOARD WRAPPER (keeps same ids and structure) -->
+<div id="dashboardWrapper" style="display:block;">
 
   <div class="topbar">
-    <div style="font-weight:600;font-size:17px;">OKKHORPOTRYA — Admin</div>
+    <div class="brand">
+      <div class="logo">ও</div>
+      <div class="name">
+        <div style="font-weight:700;font-size:17px;">OKKHORPOTRYA</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">Admin Panel</div>
+      </div>
+    </div>
 
-    <div>
-      <button id="homeBtn" class="button" style="background:#3b82f6;">🏠 Home</button>
-      <button id="themeBtn" class="button" style="background:#6b21a8;">🌙 Theme</button>
-      <button id="logoutBtn" class="button" style="background:#b91c1c;">Logout</button>
+    <div class="controls">
+      <button id="homeBtn" class="button" title="Go to public site">🏠 Home</button>
+      <button id="themeBtn" class="button" title="Toggle theme">🌙 Theme</button>
+      <button id="logoutBtn" class="button" style="background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white">Logout</button>
     </div>
   </div>
 
-  <!-- SIDEBAR (desktop) -->
+  <!-- SIDEBAR (desktop) — keep same button ids -->
   <div class="sidebar">
     <button id="menu-overview">🏠 Overview</button>
     <button id="menu-profile">👤 Profile</button>
@@ -341,103 +143,71 @@ body.dark .bottomNav {
     <button id="menu-theme">🎨 Theme</button>
   </div>
 
-  <!-- BOTTOM NAV (mobile) -->
-  <div class="bottomNav">
-    <button id="b-overview">🏠</button>
-    <button id="b-profile">👤</button>
-    <button id="b-new">✏️</button>
-    <button id="b-manage">📚</button>
-    <button id="b-stats">📊</button>
-    <button id="b-theme">🎨</button>
+  <!-- BOTTOM NAV (mobile) — keep same ids -->
+  <div class="bottomNav" style="display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);width:92%;height:66px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:18px;align-items:center;justify-content:space-around;padding:8px;z-index:45">
+    <button id="b-overview" class="iconBtn">🏠</button>
+    <button id="b-profile" class="iconBtn">👤</button>
+    <button id="b-new" class="iconBtn">✏️</button>
+    <button id="b-manage" class="iconBtn">📚</button>
+    <button id="b-stats" class="iconBtn">📊</button>
+    <button id="b-theme" class="iconBtn">🎨</button>
   </div>
 
   <div id="contentArea"></div>
 </div>
 
-<!-- ============================================================
-     UI SCRIPT (routing)
-============================================================ -->
+<!-- UI SCRIPT — keep routing and ids intact, but enrich interactions -->
 <script>
-/* -------------------------------------------
-   Terminal Hacker Intro Logic
--------------------------------------------- */
-
+/* Terminal lines kept but faster and smoother */
 const terminalLines = [
   "> Booting OKKHORPOTRYA OS v3.1",
-  "> Decrypting access modules...",
-  "> Establishing secure connection...",
+  "> Loading creative fonts and frames...",
+  "> Securing admin modules...",
   "> Firebase token verified.",
-  "> Welcome administrator.",
+  "> Welcome, administrator.",
   "> Enter security key:"
 ];
 
-let tIndex = 0;
-let charIndex = 0;
-let typingSpeed = 40;
-
+let tIndex = 0, charIndex = 0, typingSpeed = 30;
 const termOut = document.getElementById("terminalOutput");
 const termInput = document.getElementById("terminalInput");
 
-function typeLine() {
-  if (tIndex >= terminalLines.length) {
-    // Focus input at final line
-    termInput.focus();
-    return;
-  }
-
-  let line = terminalLines[tIndex];
-  let current = line.substring(0, charIndex);
-
-  if (charIndex === 0) {
-    termOut.innerHTML += "<div class='terminal-line'></div>";
-  }
-
+function typeLine(){
+  if(tIndex>=terminalLines.length){ termInput.focus(); return; }
+  const line = terminalLines[tIndex];
+  const current = line.substring(0,charIndex);
+  if(charIndex===0) termOut.innerHTML += "<div class='terminal-line'></div>";
   termOut.lastChild.textContent = current;
-
   charIndex++;
-
-  if (charIndex <= line.length) {
-    setTimeout(typeLine, typingSpeed);
-  } else {
-    tIndex++;
-    charIndex = 0;
-    setTimeout(typeLine, 300);
-  }
+  if(charIndex<=line.length) setTimeout(typeLine, typingSpeed);
+  else{ tIndex++; charIndex=0; setTimeout(typeLine, 260); }
 }
 
-typeLine();
+setTimeout(typeLine, 300);
 
-/* -------------------------------------------
-   ADMIN KEY CHECK INSIDE TERMINAL
--------------------------------------------- */
 const correctKey = "1";
-
 termInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
+  if(e.key === "Enter"){
     const value = termInput.value.trim();
-
-    if (value === correctKey) {
+    if(value === correctKey){
       document.getElementById("terminalScreen").style.display = "none";
       document.getElementById("dashboardWrapper").style.display = "block";
+      loadOverview();
     } else {
-      termOut.innerHTML += `<div class="terminal-line">> Access Denied ❌</div>`;
+      termOut.innerHTML += `<div class='terminal-line'>> Access Denied ❌</div>`;
+      termInput.value = "";
     }
-
-    termInput.value = "";
   }
 });
 
-/* -------------------------------------------
-   UI Navigation Logic
--------------------------------------------- */
-
-function setActive(buttonId) {
-  document.querySelectorAll(".sidebar button").forEach(b => b.classList.remove("active"));
+/* Navigation helpers */
+function setActive(buttonId){
+  document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('active'));
   const btn = document.getElementById(buttonId);
-  if (btn) btn.classList.add("active");
+  if(btn) btn.classList.add('active');
 }
 
-/* Desktop */
+/* keep same handlers */
 document.getElementById("menu-overview").onclick = () => loadOverview();
 document.getElementById("menu-profile").onclick = () => loadProfile();
 document.getElementById("menu-new").onclick = () => loadNewArticle();
@@ -445,7 +215,6 @@ document.getElementById("menu-manage").onclick = () => loadManage();
 document.getElementById("menu-stats").onclick = () => loadStats();
 document.getElementById("menu-theme").onclick = () => toggleTheme();
 
-/* Mobile */
 document.getElementById("b-overview").onclick = () => loadOverview();
 document.getElementById("b-profile").onclick = () => loadProfile();
 document.getElementById("b-new").onclick = () => loadNewArticle();
@@ -453,72 +222,65 @@ document.getElementById("b-manage").onclick = () => loadManage();
 document.getElementById("b-stats").onclick = () => loadStats();
 document.getElementById("b-theme").onclick = () => toggleTheme();
 
-/* Home Button */
-document.getElementById("homeBtn").onclick = () => {
-  window.location.href = "index.html";
-};
-
-/* Dark Mode */
+document.getElementById("homeBtn").onclick = () => { window.location.href = "index.html" };
 document.getElementById("themeBtn").onclick = () => toggleTheme();
-document.getElementById("menu-theme").onclick = () => toggleTheme();
 
-function toggleTheme() {
-  document.body.classList.toggle("dark");
-  localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+document.getElementById("logoutBtn").onclick = () => { /* firebase logout handled in module script */ };
+
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  localStorage.setItem('theme', document.body.classList.contains('dark')? 'dark':'light');
 }
+if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark');
 
-/* Load saved theme */
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark");
-}
-
-/* -------------------------------------------
-   PAGE LOADING FUNCTIONS
--------------------------------------------- */
-
-function loadOverview() {
-  setActive("menu-overview");
+/* Page loads — preserve existing content templates but styled */
+function loadOverview(){
+  setActive('menu-overview');
   contentArea.innerHTML = `
     <div class="card">
-      <h2>🏠 Overview</h2>
-      <p>Welcome to the admin dashboard.</p>
+      <h2 style="font-family:'Playfair Display', serif; font-size:20px">🏠 Overview</h2>
+      <p style="color:var(--muted);margin-top:8px">Welcome to the beautiful admin dashboard — quick stats and recent activity below.</p>
+      <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:220px" class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-weight:700;font-size:18px">Articles</div><div style="color:var(--muted);font-size:13px">Total published / pending</div></div>
+            <div class="badge">42</div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:220px" class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-weight:700;font-size:18px">Authors</div><div style="color:var(--muted);font-size:13px">Active authors this month</div></div>
+            <div class="badge">8</div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:220px" class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-weight:700;font-size:18px">Visitors</div><div style="color:var(--muted);font-size:13px">Last 30 days</div></div>
+            <div class="badge">7.1k</div>
+          </div>
+        </div>
+      </div>
     </div>
   `;
 }
 
-function loadProfile() {
-  setActive("menu-profile");
-
-  const user = JSON.parse(localStorage.getItem("loggedUser")) || {
-    displayName: "Unknown",
-    email: "Unknown",
-    uid: "Unknown",
-    photoURL: ""
-  };
-
+function loadProfile(){
+  setActive('menu-profile');
+  const user = JSON.parse(localStorage.getItem('loggedUser')) || {displayName:'Unknown',email:'Unknown',uid:'Unknown',photoURL:''};
   contentArea.innerHTML = `
-    <div class="profileCard">
-      <h2 style="margin-bottom:12px;">👤 Profile</h2>
-
-      ${user.photoURL
-        ? `<img src="${user.photoURL}" style="width:90px;height:90px;border-radius:50%;margin:10px auto;">`
-        : `<div style="
-            width:90px;height:90px;border-radius:50%;
-            background:#dbeafe;color:#1e40af;font-size:42px;
-            display:flex;align-items:center;justify-content:center;
-            margin:10px auto;
-          ">${user.displayName.charAt(0).toUpperCase()}</div>`}
-
-      <p><b>${user.displayName}</b></p>
-      <p style="opacity:0.7;">${user.email}</p>
-      <p style="font-size:13px;opacity:0.5;">UID: ${user.uid}</p>
+    <div class="card profileCard">
+      ${user.photoURL? `<img src="${user.photoURL}">` : `<div style="width:84px;height:84px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800">${user.displayName.charAt(0)||'O'}</div>`}
+      <div class="meta">
+        <b>${user.displayName}</b>
+        <p style="color:var(--muted)">${user.email}</p>
+        <p style="color:var(--muted);font-size:12px">UID: ${user.uid}</p>
+      </div>
     </div>
   `;
 }
 
-function loadNewArticle() {
-  setActive("menu-new");
-
+function loadNewArticle(){
+  setActive('menu-new');
   contentArea.innerHTML = `
     <div class="card">
       <h2>📝 New Article</h2>
@@ -532,56 +294,47 @@ function loadNewArticle() {
         <option value="others">🎭 Others</option>
       </select>
 
-      <label>Thumbnail</label>
+      <label style="margin-top:8px">Thumbnail</label>
       <input type="file" id="articleThumbnail" class="input">
 
-      <label>Title</label>
+      <label style="margin-top:8px">Title</label>
       <input type="text" id="articleTitle" class="input">
 
-      <label>Content</label>
-      <textarea id="articleContent" class="input"></textarea>
+      <label style="margin-top:8px">Content</label>
+      <textarea id="articleContent" class="input" style="min-height:160px"></textarea>
 
-      <button id="publishArticle" class="button" style="margin-top:12px;">Publish</button>
+      <button id="publishArticle" class="button" style="margin-top:12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff">Publish</button>
     </div>
   `;
 }
 
-function loadManage() {
-  setActive("menu-manage");
+function loadManage(){
+  setActive('menu-manage');
   loadArticles();
 }
 
-function loadStats() {
-  setActive("menu-stats");
-
+function loadStats(){
+  setActive('menu-stats');
   contentArea.innerHTML = `
     <div class="card">
       <h2>📈 Article Statistics</h2>
-      <canvas id="statsChart" style="margin-top:20px;"></canvas>
+      <canvas id="statsChart" style="margin-top:20px;max-width:720px"></canvas>
     </div>
   `;
-
   drawChart();
 }
 
 </script>
 
 <!-- ============================================================
-     FIREBASE MODULE SCRIPT
+     FIREBASE MODULE SCRIPT — kept intact (placed after UI so IDs exist)
 ============================================================ -->
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { 
-  getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc 
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { 
-  getStorage, ref, uploadBytes, getDownloadURL 
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-
-import { 
-  getAuth, onAuthStateChanged, signOut
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 /* Firebase Config */
 const firebaseConfig = {
@@ -599,53 +352,28 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const auth = getAuth(app);
 
-/* Protect admin */
 onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
-  localStorage.setItem("loggedUser", JSON.stringify({
-    displayName: user.displayName || "",
-    email: user.email || "",
-    uid: user.uid,
-    photoURL: user.photoURL || ""
-  }));
+  if (!user) { window.location.href = "login.html"; return; }
+  localStorage.setItem("loggedUser", JSON.stringify({ displayName: user.displayName || "", email: user.email || "", uid: user.uid, photoURL: user.photoURL || "" }));
 });
 
-/* Logout */
-document.getElementById("logoutBtn").onclick = async () => {
-  await signOut(auth);
-  localStorage.removeItem("loggedUser");
-  window.location.href = "login.html";
-};
+document.getElementById("logoutBtn").onclick = async () => { await signOut(auth); localStorage.removeItem("loggedUser"); window.location.href = "login.html" };
 
 /* Publish Article */
 document.addEventListener("click", async (e) => {
   if (e.target.id === "publishArticle") {
-
     const title = document.getElementById("articleTitle").value.trim();
     const content = document.getElementById("articleContent").value.trim();
     const category = document.getElementById("articleCategory").value.trim();
     const file = document.getElementById("articleThumbnail").files[0];
 
-    if (!title || !content || !file || !category) {
-      alert("Please fill all fields!");
-      return;
-    }
+    if (!title || !content || !file || !category) { alert("Please fill all fields!"); return; }
 
     const imgRef = ref(storage, "thumbs/" + Date.now() + "_" + file.name);
     await uploadBytes(imgRef, file);
     const imgURL = await getDownloadURL(imgRef);
 
-    await addDoc(collection(db, "articles"), {
-      title,
-      content,
-      category,
-      thumbnailURL: imgURL,
-      status: "pending",
-      createdAt: Date.now()
-    });
+    await addDoc(collection(db, "articles"), { title, content, category, thumbnailURL: imgURL, status: "pending", createdAt: Date.now() });
 
     alert("Article submitted!");
   }
@@ -659,36 +387,25 @@ window.loadArticles = async () => {
   let html = "";
   docsSnap.forEach((d) => {
     const a = d.data();
-
     html += `
-      <div style="
-        background:#f1f5f9;
-        padding:14px;
-        border-radius:10px;
-        margin-bottom:12px;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-      ">
-        <div style="display:flex; gap:12px;">
-          <img src="${a.thumbnailURL}" style="width:60px;height:60px;border-radius:6px;">
+      <div style="background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:14px;border-radius:10px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex; gap:12px;align-items:center;">
+          <img src="${a.thumbnailURL}" style="width:60px;height:60px;border-radius:6px;object-fit:cover;">
           <div>
             <b>${a.title}</b><br>
-            <small>Category: ${a.category}</small><br>
-            <small>Status: ${a.status}</small><br>
-            <small>${new Date(a.createdAt).toLocaleString()}</small>
+            <small style="color:var(--muted)">Category: ${a.category}</small><br>
+            <small style="color:var(--muted)">Status: ${a.status}</small><br>
+            <small style="color:var(--muted)">${new Date(a.createdAt).toLocaleString()}</small>
           </div>
         </div>
 
         <div>
           ${a.status === "pending"
-            ? `<button class="button" style="padding:6px 10px;background:#16a34a;"
-                onclick="publishArticle('${d.id}')">Publish</button>`
+            ? `<button class="button" style="padding:6px 10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;" onclick="publishArticle('${d.id}')">Publish</button>`
             : `<span style="color:#16a34a;font-weight:600;">Published</span>`
           }
 
-          <button class="button" style="padding:6px 10px;background:#b91c1c;margin-left:6px;"
-            onclick="deleteArticle('${d.id}')">Delete</button>
+          <button class="button" style="padding:6px 10px;background:#b91c1c;margin-left:6px;" onclick="deleteArticle('${d.id}')">Delete</button>
         </div>
       </div>
     `;
@@ -703,48 +420,28 @@ window.loadArticles = async () => {
 };
 
 /* Publish Action */
-window.publishArticle = async (id) => {
-  await updateDoc(doc(db, "articles", id), { status: "published" });
-  loadArticles();
-};
-
+window.publishArticle = async (id) => { await updateDoc(doc(db, "articles", id), { status: "published" }); loadArticles(); };
 /* Delete Action */
-window.deleteArticle = async (id) => {
-  if (!confirm("Delete this article?")) return;
-  await deleteDoc(doc(db, "articles", id));
-  loadArticles();
-};
+window.deleteArticle = async (id) => { if (!confirm("Delete this article?")) return; await deleteDoc(doc(db, "articles", id)); loadArticles(); };
 
 /* Draw Stats Chart */
 window.drawChart = async () => {
   const docsSnap = await getDocs(collection(db, "articles"));
-
-  let published = 0, pending = 0;
-  let poem = 0, golpo = 0, probondho = 0, others = 0;
-
+  let published = 0, pending = 0, poem = 0, golpo = 0, probondho = 0, others = 0;
   docsSnap.forEach((d) => {
     const a = d.data();
-
-    if (a.status === "published") published++;
-    else pending++;
-
-    if (a.category === "poem") poem++;
-    if (a.category === "golpo") golpo++;
-    if (a.category === "probondho") probondho++;
-    if (a.category === "others") others++;
+    if (a.status === "published") published++; else pending++;
+    if (a.category === "poem") poem++; if (a.category === "golpo") golpo++; if (a.category === "probondho") probondho++; if (a.category === "others") others++;
   });
 
-  new Chart(document.getElementById("statsChart"), {
-    type: "pie",
+  const ctx = document.getElementById('statsChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
     data: {
-      labels: ["Published", "Pending", "Poem", "Golpo", "Probondho", "Others"],
-      datasets: [{
-        data: [published, pending, poem, golpo, probondho, others],
-        backgroundColor: [
-          "#16a34a", "#eab308", "#3b82f6", "#ec4899", "#a855f7", "#f97316"
-        ]
-      }]
-    }
+      labels: ['Published','Pending','Poem','Golpo','Probondho','Others'],
+      datasets: [{ data: [published,pending,poem,golpo,probondho,others], backgroundColor: [ '#16a34a','#eab308','#3b82f6','#ec4899','#a855f7','#f97316' ] }]
+    },
+    options: { plugins:{legend:{position:'bottom'}}, cutout:'60%'}
   });
 };
 
