@@ -1,392 +1,220 @@
-<!-- NEW HYBRID (GLASS + PROFESSIONAL) ULTRA‑MODERN ADMIN UI
-     All IDs, JS logic, Firebase functionality preserved.
-     Only DESIGN changed — Full layout, CSS, animations, structure.
--->
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Admin | OKKHORPOTRYA — Ultra Modern</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>OKKHORPOTRYA — All in One System</title>
 
 <style>
-/* -------------------------------------------------------------
-   GLOBAL THEME — HYBRID GLASS + PROFESSIONAL MODERN UI
---------------------------------------------------------------*/
-:root{
-  --bg1: #0a0c14;
-  --bg2: #0f101b;
-  --glass: rgba(255,255,255,0.06);
-  --glass-soft: rgba(255,255,255,0.03);
-  --border-soft: rgba(255,255,255,0.08);
-  --text: #e4e8f1;
-  --muted: #98a2b3;
-  --accent: #7c3aed;
-  --accent2: #00d1cf;
-  --radius: 18px;
-  --blur: blur(18px);
-}
+  body { font-family: Arial; margin:0; background:#f4f4f4; }
+  header { background:#000; color:#fff; padding:10px; text-align:center; }
+  section { display:none; padding:20px; }
+  .active { display:block; }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif;}
-body{
-  background: radial-gradient(circle at 30% 20%, #1c1f35 0%, #0a0c14 60%);
-  color: var(--text);
-  overflow: hidden;
-  height:100vh;
-}
-
-/* Animated background orbs */
-.bg-orb{
-  position:fixed;
-  width:420px;height:420px;
-  background: radial-gradient(circle,var(--accent2) 0%,transparent 60%);
-  filter: blur(120px);
-  opacity:0.25;
-  z-index:-5;
-  animation: floatOrb 23s infinite ease-in-out alternate;
-}
-#orb1{left:-120px;top:-80px;}
-#orb2{right:-200px;bottom:-160px;background:radial-gradient(circle,var(--accent) 0%,transparent 60%);} 
-
-@keyframes floatOrb{from{transform:translateY(0)}to{transform:translateY(-80px)}}
-
-/* -------------------------------------------------------------
-   TERMINAL INTRO (kept same behavior, better visuals)
---------------------------------------------------------------*/
-#terminalScreen{
-  position:fixed;inset:0;
-  background:linear-gradient(180deg,#05060a 0%,#090b12 100%);
-  color:#7fffb4;
-  font-family: "SF Mono", monospace;
-  padding:40px;
-  display:flex;flex-direction:column;
-  z-index:1000;
-}
-#terminalOutput{max-width:900px;font-size:15px;line-height:1.55;}
-#terminalInput{
-  margin-top:16px;
-  width:360px;
-  background:transparent;
-  border:1px dashed #3d4f4b;
-  padding:12px;
-  border-radius:8px;
-  color:#9effc9;
-}
-.blinkCursor{margin-left:8px;width:12px;height:20px;background:var(--accent2);border-radius:3px;animation:blink 1s infinite steps(2);}    
-@keyframes blink{50%{opacity:0}}
-
-/* -------------------------------------------------------------
-   NEW TOPBAR
---------------------------------------------------------------*/
-.topbar{
-  position:fixed;left:0;right:0;top:0;height:74px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 32px;
-  background:rgba(255,255,255,0.03);
-  backdrop-filter:blur(22px);
-  border-bottom:1px solid var(--border-soft);
-  z-index:40;
-}
-.brand{display:flex;align-items:center;gap:14px}
-.logo{
-  width:48px;height:48px;
-  border-radius:14px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;font-weight:800;
-}
-
-.button{
-  padding:10px 18px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.05);
-  background:rgba(255,255,255,0.04);
-  color:var(--text);
-  font-weight:600;
-  cursor:pointer;
-  transition:.25s;
-}
-.button:hover{background:rgba(255,255,255,0.08);transform:translateY(-3px)}
-
-/* -------------------------------------------------------------
-   SUPER‑MODERN SIDEBAR — floating minimal blur vertical dock
---------------------------------------------------------------*/
-.sidebar{
-  position:fixed;left:28px;top:110px;
-  width:84px;
-  padding:18px 12px;
-  background:var(--glass);
-  backdrop-filter:var(--blur);
-  border-radius:24px;
-  border:1px solid var(--border-soft);
-  display:flex;flex-direction:column;
-  align-items:center;
-  gap:18px;
-  z-index:35;
-}
-.sidebar button{
-  width:52px;height:52px;
-  border-radius:18px;
-  border:none;
-  background:rgba(255,255,255,0.05);
-  color:var(--muted);
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;
-  transition:.22s;
-}
-.sidebar button:hover{background:rgba(255,255,255,0.12);color:white;transform:translateY(-3px)}
-.sidebar button.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;box-shadow:0 0 22px rgba(0,255,255,0.3)}
-
-/* -------------------------------------------------------------
-   CONTENT AREA
---------------------------------------------------------------*/
-#contentArea{
-  position:absolute;
-  left:160px;right:32px;top:110px;bottom:32px;
-  overflow:auto;
-  padding-right:10px;
-}
-
-.card{
-  background:var(--glass-soft);
-  border-radius:var(--radius);
-  border:1px solid var(--border-soft);
-  padding:26px;
-  margin-bottom:22px;
-  backdrop-filter:var(--blur);
-  box-shadow:0 22px 70px rgba(0,0,0,0.35);
-  animation:fadeIn .35s ease;
-}
-@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-
-/* -------------------------------------------------------------
-   BOTTOM MOBILE DOCK
---------------------------------------------------------------*/
-.bottomNav{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  width:88%;height:72px;
-  background:var(--glass);
-  backdrop-filter:var(--blur);
-  border-radius:22px;
-  border:1px solid var(--border-soft);
-  display:none;
-  align-items:center;justify-content:space-around;
-  z-index:45;
-}
-.iconBtn{
-  width:52px;height:52px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,0.05);
-  background:rgba(255,255,255,0.04);
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;color:var(--muted);
-  transition:.25s;
-}
-.iconBtn:hover{background:rgba(255,255,255,0.12);color:white;transform:translateY(-4px)}
-
-/* -------------------------------------------------------------
-   RESPONSIVE
---------------------------------------------------------------*/
-@media(max-width:900px){
-  .sidebar{display:none}
-  #contentArea{left:20px}
-  .bottomNav{display:flex}
-}
-
+  input, select, textarea, button {
+    width:100%; padding:10px; margin:10px 0; border-radius:6px;
+  }
+  .article-card { background:#fff; padding:15px; margin:10px 0; border-radius:8px; }
+  img.thumb { width:100%; max-height:180px; object-fit:cover; border-radius:8px; }
+  .like-box button { width:48%; }
 </style>
 </head>
+
 <body>
+<header>
+  <h1>OKKHORPOTRYA — All in One Admin System</h1>
+</header>
 
-<div id="orb1" class="bg-orb"></div>
-<div id="orb2" class="bg-orb"></div>
+<!-- LOGIN SECTION -->
+<section id="loginSection" class="active">
+  <h2>Admin Login</h2>
+  <input id="loginEmail" type="email" placeholder="Email">
+  <input id="loginPass" type="password" placeholder="Password">
+  <button id="loginBtn">Login</button>
+  <p id="loginError"></p>
+</section>
 
-<!-- TERMINAL INTRO -->
-<div id="terminalScreen">
-  <div id="terminalOutput"></div>
-  <input id="terminalInput" placeholder="Type admin key & press Enter" />
-  <span class="blinkCursor"></span>
-</div>
+<!-- DASHBOARD SECTION -->
+<section id="dashboardSection">
+  <h2>Dashboard</h2>
+  <button onclick="showPage('submitSection')">✏ Submit Article</button>
+  <button onclick="showPage('categorySection')">📚 View Articles</button>
+  <button id="logoutBtn">Logout</button>
+  <br><br>
+  <p><b>Logged in:</b> <span id="adminEmail"></span></p>
+</section>
 
-<!-- DASHBOARD WRAPPER -->
-<div id="dashboardWrapper" style="display:none;">
+<!-- SUBMIT ARTICLE -->
+<section id="submitSection">
+  <h2>Publish New Article</h2>
 
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">ও</div>
-      <div>
-        <div style="font-weight:700;font-size:18px">OKKHORPOTRYA</div>
-        <div style="font-size:12px;color:var(--muted)">Admin Panel</div>
-      </div>
-    </div>
+  <input id="title" placeholder="Title">
+  <label>Thumbnail</label>
+  <input type="file" id="thumbnail">
+  <label>Category</label>
 
-    <div style="display:flex;gap:10px;align-items:center;">
-      <button id="homeBtn" class="button">🏠 Home</button>
-      <button id="themeBtn" class="button">🌙 Mode</button>
-      <button id="logoutBtn" class="button" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:white">Logout</button>
-    </div>
+  <select id="category">
+    <option value="poem">Poem</option>
+    <option value="news">News</option>
+    <option value="review">Review</option>
+    <option value="story">Story</option>
+  </select>
+
+  <textarea id="content" placeholder="Full content"></textarea>
+
+  <button id="publishBtn">Publish</button>
+  <button onclick="showPage('dashboardSection')">Back</button>
+</section>
+
+<!-- CATEGORY LIST -->
+<section id="categorySection">
+  <h2>Select Category</h2>
+
+  <select id="catSelect">
+    <option value="poem">Poem</option>
+    <option value="news">News</option>
+    <option value="review">Review</option>
+    <option value="story">Story</option>
+  </select>
+
+  <button id="loadCat">Load</button>
+  <div id="catList"></div>
+
+  <button onclick="showPage('dashboardSection')">Back</button>
+</section>
+
+<!-- SINGLE ARTICLE VIEW -->
+<section id="articleView">
+  <h2 id="aTitle"></h2>
+  <img id="aThumb" class="thumb" />
+  <p id="aContent"></p>
+
+  <div class="like-box">
+    <button id="likeBtn">👍 Like</button>
+    <button id="disBtn">👎 Dislike</button>
   </div>
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <button id="menu-overview">🏠</button>
-    <button id="menu-profile">👤</button>
-    <button id="menu-new">✏️</button>
-    <button id="menu-manage">📚</button>
-    <button id="menu-stats">📊</button>
-    <button id="menu-theme">🎨</button>
-  </div>
+  <button onclick="showPage('categorySection')">Back</button>
+</section>
 
-  <!-- MOBILE DOCK -->
-  <div class="bottomNav">
-    <button id="b-overview" class="iconBtn">🏠</button>
-    <button id="b-profile" class="iconBtn">👤</button>
-    <button id="b-new" class="iconBtn">✏️</button>
-    <button id="b-manage" class="iconBtn">📚</button>
-    <button id="b-stats" class="iconBtn">📊</button>
-    <button id="b-theme" class="iconBtn">🎨</button>
-  </div>
-
-  <div id="contentArea"></div>
-</div>
-
-<script>
-/* terminal intro kept same logic */
-const terminalLines=["> Booting system...","> Initializing modules...","> Authenticating...","> Welcome.","> Enter key:"];
-let tIndex=0,charIndex=0,typingSpeed=32;
-const termOut=document.getElementById("terminalOutput");
-const termInput=document.getElementById("terminalInput");
-function typeLine(){if(tIndex>=terminalLines.length){termInput.focus();return;}const line=terminalLines[tIndex];const current=line.substring(0,charIndex);if(charIndex===0)termOut.innerHTML+="<div class='tl'></div>";termOut.lastChild.textContent=current;charIndex++;if(charIndex<=line.length)setTimeout(typeLine,typingSpeed);else{tIndex++;charIndex=0;setTimeout(typeLine,260);}}
-setTimeout(typeLine,300);
-const correctKey="1";
-termInput.addEventListener("keydown",(e)=>{if(e.key==="Enter"){if(termInput.value.trim()===correctKey){document.getElementById("terminalScreen").style.display="none";document.getElementById("dashboardWrapper").style.display="block";loadOverview();}else{termOut.innerHTML+="<div>> Access denied</div>";termInput.value="";}}});
-
-function setActive(id){document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('active'));const btn=document.getElementById(id); if(btn)btn.classList.add('active');}
-
-document.getElementById("menu-overview").onclick=()=>loadOverview();
-document.getElementById("menu-profile").onclick=()=>loadProfile();
-document.getElementById("menu-new").onclick=()=>loadNewArticle();
-document.getElementById("menu-manage").onclick=()=>loadManage();
-document.getElementById("menu-stats").onclick=()=>loadStats();
-document.getElementById("menu-theme").onclick=()=>toggleTheme();
-
-document.getElementById("b-overview").onclick=()=>loadOverview();
-document.getElementById("b-profile").onclick=()=>loadProfile();
-document.getElementById("b-new").onclick=()=>loadNewArticle();
-document.getElementById("b-manage").onclick=()=>loadManage();
-document.getElementById("b-stats").onclick=()=>loadStats();
-document.getElementById("b-theme").onclick=()=>toggleTheme();
-
-function toggleTheme(){document.body.classList.toggle('dark');}
-
-/* Pages redesign preserved (JS unchanged) */
-function loadOverview(){setActive('menu-overview');contentArea.innerHTML=`
- <div class='card'><h2 style='font-size:22px;font-weight:700'>🏠 Overview</h2><p style='color:var(--muted);margin-top:6px'>Quick stats & system summary.</p></div>`; }
-
-function loadProfile(){setActive('menu-profile');const u=JSON.parse(localStorage.getItem('loggedUser'))||{};contentArea.innerHTML=`
- <div class='card'>
-   <h2 style='font-size:22px;font-weight:700'>👤 Profile</h2>
-   <p style='color:var(--muted);margin-top:10px'>${u.email}</p>
- </div>`; }
-
-function loadNewArticle(){setActive('menu-new');contentArea.innerHTML=`
- <div class='card'>
-   <h2>✏️ New Article</h2>
-   <label>Category</label><select id='articleCategory' class='input'></select>
- </div>`; }
-
-function loadManage(){setActive('menu-manage'); loadArticles(); }
-
-function loadStats(){setActive('menu-stats');contentArea.innerHTML=`<div class='card'><h2>📊 Stats</h2><canvas id='statsChart'></canvas></div>`; drawChart(); }
-</script>
-
-<!-- Firebase module preserved EXACT -->
+<!-- Firebase SDK -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  // ---------------------------------------
+  // Firebase Setup
+  // ---------------------------------------
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, updateDoc, increment } 
+    from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL }
+    from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
 
-const firebaseConfig={
-  apiKey:"AIzaSyCnFgBxGYqkMkYCTCbPPJzo8fbbZmylcHY",
-  authDomain:"okkhorpotrya.firebaseapp.com",
-  projectId:"okkhorpotrya",
-  storageBucket:"okkhorpotrya.firebasestorage.app",
-  messagingSenderId:"401210408956",
-  appId:"1:401210408956:web:958c0361306121244bbc79",
-  measurementId:"G-VN5XLFYH8P"
-};
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
-const storage=getStorage(app);
-const auth=getAuth(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyCnFgBxGYqkMkYCTCbPPJzo8fbbZmylcHY",
+    authDomain: "okkhorpotrya.firebaseapp.com",
+    projectId: "okkhorpotrya",
+    storageBucket: "okkhorpotrya.firebasestorage.app",
+    messagingSenderId: "401210408956",
+    appId: "1:401210408956:web:958c0361306121244bbc79",
+    measurementId: "G-VN5XLFYH8P"
+  };
 
-onAuthStateChanged(auth,(user)=>{
- if(!user){window.location.href="login.html";return;}
- localStorage.setItem("loggedUser",JSON.stringify({displayName:user.displayName||"",email:user.email||"",uid:user.uid,photoURL:user.photoURL||""}));
-});
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const storage = getStorage(app);
 
-document.getElementById("logoutBtn").onclick=async()=>{await signOut(auth);localStorage.removeItem("loggedUser");window.location.href="login.html"};
+  // ---------------------------------------
+  // SECTION CONTROL
+  // ---------------------------------------
+  function showPage(id) {
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
 
-document.addEventListener("click",async(e)=>{
- if(e.target.id==="publishArticle"){
-   const t=document.getElementById("articleTitle").value.trim();
-   const c=document.getElementById("articleContent").value.trim();
-   const ct=document.getElementById("articleCategory").value.trim();
-   const f=document.getElementById("articleThumbnail").files[0];
-   if(!t||!c||!f||!ct){alert("Please fill all fields!");return;}
-   const imgRef=ref(storage,"thumbs/"+Date.now()+"_"+f.name);
-   await uploadBytes(imgRef,f);
-   const url=await getDownloadURL(imgRef);
-   await addDoc(collection(db,"articles"),{title:t,content:c,category:ct,thumbnailURL:url,status:"pending",createdAt:Date.now()});
-   alert("Article submitted!");
- }
-});
+  // ---------------------------------------
+  // LOGIN
+  // ---------------------------------------
+  loginBtn.onclick = () => {
+    signInWithEmailAndPassword(auth, loginEmail.value, loginPass.value)
+      .catch(err => loginError.textContent = err.message);
+  };
 
-window.loadArticles=async()=>{
- const cA=document.getElementById("contentArea");
- const snap=await getDocs(collection(db,"articles"));
- let html="";
- snap.forEach((d)=>{
-  const a=d.data();
-  html+=`<div style="background:rgba(255,255,255,0.03);padding:14px;border-radius:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
-    <div style="display:flex;gap:12px;align-items:center;">
-     <img src="${a.thumbnailURL}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;">
-     <div>
-      <b>${a.title}</b><br>
-      <small style="color:var(--muted)">Category: ${a.category}</small><br>
-      <small style="color:var(--muted)">Status: ${a.status}</small><br>
-      <small style="color:var(--muted)">${new Date(a.createdAt).toLocaleString()}</small>
-     </div>
-    </div>
-    <div>
-      ${a.status==="pending"?`<button class="button" style="padding:6px 12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white" onclick="publishArticle('${d.id}')">Publish</button>`:`<span style="color:#16a34a;font-weight:600;">Published</span>`}
-      <button class="button" style="padding:6px 12px;background:#b91c1c;margin-left:6px" onclick="deleteArticle('${d.id}')">Delete</button>
-    </div>
-   </div>`;
- });
- cA.innerHTML=`<div class="card"><h2>📚 Manage Articles</h2><div style="margin-top:20px;">${html}</div></div>`;
-};
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      adminEmail.textContent = user.email;
+      showPage("dashboardSection");
+    } else {
+      showPage("loginSection");
+    }
+  });
 
-window.publishArticle=async(id)=>{await updateDoc(doc(db,"articles",id),{status:"published"});loadArticles();};
-window.deleteArticle=async(id)=>{if(!confirm("Delete?"))return;await deleteDoc(doc(db,"articles",id));loadArticles();};
+  logoutBtn.onclick = () => signOut(auth);
 
-window.drawChart=async()=>{
- const snap=await getDocs(collection(db,"articles"));
- let p=0,q=0,po=0,g=0,pr=0,o=0;
- snap.forEach((d)=>{
-  const a=d.data();
-  if(a.status==="published")p++;else q++;
-  if(a.category==="poem")po++; if(a.category==="golpo")g++; if(a.category==="probondho")pr++; if(a.category==="others")o++;
- });
- const ctx=document.getElementById('statsChart').getContext('2d');
- new Chart(ctx,{type:'doughnut',data:{labels:['Published','Pending','Poem','Golpo','Probondho','Others'],datasets:[{data:[p,q,po,g,pr,o]}]}});
-};
+  // ---------------------------------------
+  // PUBLISH ARTICLE
+  // ---------------------------------------
+  publishBtn.onclick = async () => {
+    const id = Date.now().toString();
+    const file = thumbnail.files[0];
+
+    const tRef = ref(storage, `thumbnails/${id}.jpg`);
+    await uploadBytes(tRef, file);
+    const imageURL = await getDownloadURL(tRef);
+
+    await setDoc(doc(db, "articles", id), {
+      id,
+      title: title.value,
+      content: content.value,
+      category: category.value,
+      thumbnail: imageURL,
+      likes: 0,
+      dislikes: 0,
+      timestamp: Date.now()
+    });
+
+    alert("Published!");
+    showPage("dashboardSection");
+  };
+
+  // ---------------------------------------
+  // LOAD CATEGORY ARTICLES
+  // ---------------------------------------
+  loadCat.onclick = async () => {
+    const cat = catSelect.value;
+    catList.innerHTML = "";
+
+    const q = query(collection(db, "articles"), where("category", "==", cat));
+    const snap = await getDocs(q);
+
+    snap.forEach(d => {
+      const a = d.data();
+      catList.innerHTML += `
+        <div class="article-card" onclick="openArticle('${a.id}')">
+          <img src="${a.thumbnail}" class="thumb">
+          <h3>${a.title}</h3>
+        </div>
+      `;
+    });
+  };
+
+  // ---------------------------------------
+  // OPEN SINGLE ARTICLE
+  // ---------------------------------------
+  window.openArticle = async (id) => {
+    const snap = await getDoc(doc(db, "articles", id));
+    const a = snap.data();
+
+    aTitle.textContent = a.title;
+    aThumb.src = a.thumbnail;
+    aContent.textContent = a.content;
+
+    likeBtn.onclick = () => updateDoc(doc(db, "articles", id), { likes: increment(1) });
+    disBtn.onclick = () => updateDoc(doc(db, "articles", id), { dislikes: increment(1) });
+
+    showPage("articleView");
+  };
 </script>
 
 </body>
