@@ -1,161 +1,273 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Admin | OKKHORPOTRYA</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+<!-- CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 
-/* -------------------------------------------------------
-   GLOBAL CLEAN THEME
---------------------------------------------------------*/
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:"Inter",sans-serif;
+/* ============================================================
+   1) GLOBAL RESET + TYPOGRAPHY
+============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
 
-body{
-  background:#eef2f7;
-  color:#111;
+/* ============================================================
+   2) BACKGROUND – SOFT SHIMMER MINIMAL (Option C)
+============================================================ */
+body {
+  background: linear-gradient(135deg, #fafafa, #f1f1f1, #ffffff);
+  background-size: 300% 300%;
+  animation: subtleShimmer 18s ease infinite;
+  color: #111;
 }
 
-/* -------------------------------------------------------
-   ACCESS CARD
---------------------------------------------------------*/
-#gateOverlay{
-  position:fixed;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:rgba(255,255,255,0.4);
-  backdrop-filter:blur(6px);
-  z-index:1000;
+@keyframes subtleShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.gate-card{
-  width:360px;
-  padding:36px;
-  background:white;
-  border-radius:16px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.08);
-  text-align:center;
+/* ============================================================
+   3) TERMINAL HACKER INTRO (green neon typing)
+============================================================ */
+
+#terminalScreen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  color: #00ff66;
+  padding: 30px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  font-size: 16px;
+  overflow-y: auto;
+  z-index: 9999;
 }
 
-.gate-input{
-  width:100%;
-  padding:12px;
-  border:1px solid #ccc;
-  border-radius:10px;
-  margin-top:14px;
+.terminal-line {
+  margin-bottom: 6px;
 }
 
-.gate-btn{
-  width:100%;
-  padding:12px;
-  background:#1f2937;
-  color:white;
-  border:none;
-  border-radius:10px;
-  margin-top:16px;
-  font-weight:600;
-  cursor:pointer;
+.blinkCursor {
+  display: inline-block;
+  width: 10px;
+  background:#00ff66;
+  margin-left: 2px;
+  animation: cursorBlink 0.7s infinite;
 }
 
-#gateError{
-  margin-top:10px;
-  color:#d00;
+@keyframes cursorBlink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
-/* -------------------------------------------------------
-   DASHBOARD
---------------------------------------------------------*/
-#dashboardWrapper{ display:none; }
-
-.topbar{
-  height:60px;
-  background:white;
-  border-bottom:1px solid #ddd;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 20px;
-  box-shadow:0 2px 4px rgba(0,0,0,0.03);
+/* Terminal input field */
+#terminalInput {
+  border: none;
+  background: transparent;
+  color: #00ff66;
+  font-family: monospace;
+  font-size: 16px;
+  outline: none;
+  width: 200px;
 }
 
-.sidebar{
-  width:220px;
-  background:#1f2937;
-  height:100vh;
-  position:fixed;
-  top:60px;
-  left:0;
-  padding-top:14px;
+/* ============================================================
+   4) DASHBOARD WRAPPER (hidden until intro ends)
+============================================================ */
+#dashboardWrapper {
+  display: none;
 }
 
-.sidebar button{
-  width:100%;
-  padding:14px 20px;
-  color:#cbd5e1;
-  background:none;
-  border:none;
-  text-align:left;
-  cursor:pointer;
-  transition:.2s;
+/* ============================================================
+   5) TOPBAR
+============================================================ */
+.topbar {
+  height: 60px;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid #ddd;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.sidebar button:hover{
-  background:#273449;
-  color:white;
+.topbar button {
+  margin-left: 8px;
 }
 
-.sidebar button.active{
-  background:#3b82f6;
-  color:white;
+/* ============================================================
+   6) SIDEBAR (desktop)
+============================================================ */
+.sidebar {
+  width: 220px;
+  background: rgba(31, 41, 55, 0.95);
+  height: 100vh;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
 }
 
-#contentArea{
-  margin-left:220px;
-  padding:30px;
+.sidebar button {
+  width: 100%;
+  padding: 14px 20px;
+  background: none;
+  border: none;
+  text-align: left;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.card{
-  background:white;
-  padding:28px;
-  border-radius:12px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.06);
-  max-width:760px;
+.sidebar button:hover {
+  background: #273449;
+  color: white;
 }
 
-.input{
-  width:100%;
-  padding:12px;
-  border:1px solid #d2d6dd;
-  border-radius:8px;
-  margin:12px 0;
+.sidebar button.active {
+  background: #3b82f6;
+  color: white;
 }
 
-textarea.input{
-  min-height:180px;
+/* ============================================================
+   7) BOTTOM NAV (MOBILE)
+============================================================ */
+.bottomNav {
+  display: none;
 }
 
-.button{
-  background:#1f2937;
-  color:white;
-  padding:12px 18px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:600;
+@media (max-width: 770px) {
+
+  .sidebar {
+    display: none;
+  }
+
+  .bottomNav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(31,41,55,0.95);
+    backdrop-filter: blur(6px);
+    z-index: 30;
+
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .bottomNav button {
+    background: none;
+    border: none;
+    color: #cbd5e1;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  #contentArea {
+    margin-left: 0 !important;
+    margin-bottom: 80px;
+  }
 }
 
-.button:hover{
-  background:#111827;
+/* ============================================================
+   8) CONTENT AREA + CARDS
+============================================================ */
+#contentArea {
+  margin-left: 220px;
+  padding: 30px;
+}
+
+.card {
+  background: white;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  max-width: 760px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d2d6dd;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+.button {
+  background: #1f2937;
+  color: white;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.button:hover { background: #111827; }
+
+/* ============================================================
+   9) GLASS PROFILE CARD
+============================================================ */
+.profileCard {
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 420px;
+  margin: auto;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* ============================================================
+   10) DARK MODE
+============================================================ */
+body.dark {
+  background: #111;
+  color: #eee;
+}
+
+body.dark .card,
+body.dark .profileCard {
+  background: rgba(30,30,30,0.7);
+  border-color: rgba(255,255,255,0.1);
+  color: #eee;
+}
+
+body.dark .sidebar {
+  background: rgba(15,15,15,0.95);
+}
+
+body.dark .bottomNav {
+  background: rgba(15,15,15,0.95);
 }
 
 </style>
@@ -163,128 +275,270 @@ textarea.input{
 
 <body>
 
-<!-- PASSWORD GATE -->
-<div id="gateOverlay">
-  <div class="gate-card">
-    <h2>Admin Access</h2>
-    <input id="gateInput" type="password" class="gate-input" placeholder="Enter Security Key">
-    <button id="gateSubmit" class="gate-btn">Enter</button>
-    <div id="gateError"></div>
-  </div>
+<!-- ============================================================
+     TERMINAL INTRO (HACKER)
+============================================================ -->
+<div id="terminalScreen">
+  <div id="terminalOutput"></div>
+  <input id="terminalInput" autocomplete="off" />
+  <span class="blinkCursor"></span>
 </div>
 
-<!-- DASHBOARD -->
+<!-- ============================================================
+     DASHBOARD WRAPPER
+============================================================ -->
 <div id="dashboardWrapper">
 
   <div class="topbar">
     <div style="font-weight:600;font-size:17px;">OKKHORPOTRYA — Admin</div>
-    <button id="logoutBtn" class="button" style="background:#b91c1c;">Logout</button>
+
+    <div>
+      <button id="homeBtn" class="button" style="background:#3b82f6;">🏠 Home</button>
+      <button id="themeBtn" class="button" style="background:#6b21a8;">🌙 Theme</button>
+      <button id="logoutBtn" class="button" style="background:#b91c1c;">Logout</button>
+    </div>
   </div>
 
+  <!-- SIDEBAR (desktop) -->
   <div class="sidebar">
-    <button id="menu-dashboard">📊 Dashboard</button>
+    <button id="menu-overview">🏠 Overview</button>
+    <button id="menu-profile">👤 Profile</button>
     <button id="menu-new">📝 New Article</button>
     <button id="menu-manage">📚 Manage Articles</button>
+    <button id="menu-stats">📈 Stats</button>
+    <button id="menu-theme">🎨 Theme</button>
+  </div>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <div class="bottomNav">
+    <button id="b-overview">🏠</button>
+    <button id="b-profile">👤</button>
+    <button id="b-new">✏️</button>
+    <button id="b-manage">📚</button>
+    <button id="b-stats">📊</button>
+    <button id="b-theme">🎨</button>
   </div>
 
   <div id="contentArea"></div>
 </div>
 
-<!-- UI SCRIPT (your original logic, untouched) -->
+<!-- ============================================================
+     UI SCRIPT (routing)
+============================================================ -->
 <script>
-window.onload = () => {
+/* -------------------------------------------
+   Terminal Hacker Intro Logic
+-------------------------------------------- */
 
-  const gate = document.getElementById("gateOverlay");
-  const input = document.getElementById("gateInput");
-  const btn = document.getElementById("gateSubmit");
-  const dash = document.getElementById("dashboardWrapper");
-  const err = document.getElementById("gateError");
+const terminalLines = [
+  "> Booting OKKHORPOTRYA OS v3.1",
+  "> Decrypting access modules...",
+  "> Establishing secure connection...",
+  "> Firebase token verified.",
+  "> Welcome administrator.",
+  "> Enter security key:"
+];
 
-  const correctKey = "1";
+let tIndex = 0;
+let charIndex = 0;
+let typingSpeed = 40;
 
-  btn.onclick = () => {
-    if(input.value.trim() === correctKey){
-      gate.style.display = "none";
-      dash.style.display = "block";
-    } else err.textContent = "Incorrect key ❌";
-  };
+const termOut = document.getElementById("terminalOutput");
+const termInput = document.getElementById("terminalInput");
 
-  const contentArea = document.getElementById("contentArea");
-
-  function activate(btn){
-    document.querySelectorAll(".sidebar button")
-    .forEach(x => x.classList.remove("active"));
-    btn.classList.add("active");
+function typeLine() {
+  if (tIndex >= terminalLines.length) {
+    // Focus input at final line
+    termInput.focus();
+    return;
   }
 
-  // DASHBOARD – REAL PROFILE
-  document.getElementById("menu-dashboard").onclick = () => {
-    activate(document.getElementById("menu-dashboard"));
+  let line = terminalLines[tIndex];
+  let current = line.substring(0, charIndex);
 
-    const user = JSON.parse(localStorage.getItem("loggedUser")) || {
-      displayName: "Unknown",
-      email: "Unknown",
-      uid: "Unknown",
-      photoURL: ""
-    };
+  if (charIndex === 0) {
+    termOut.innerHTML += "<div class='terminal-line'></div>";
+  }
 
-    contentArea.innerHTML = `
-      <div class="card">
-        <h2>👤 Profile Information</h2>
-        ${user.photoURL ? `<img src="${user.photoURL}" style="width:80px;height:80px;border-radius:50%;margin-bottom:12px;">` : ""}
-        <p><b>Name:</b> ${user.displayName}</p>
-        <p><b>Email:</b> ${user.email}</p>
-        <p><b>UID:</b> ${user.uid}</p>
-      </div>
-    `;
-  };
+  termOut.lastChild.textContent = current;
 
-  // NEW ARTICLE
-  document.getElementById("menu-new").onclick = () => {
-    activate(document.getElementById("menu-new"));
+  charIndex++;
 
-    contentArea.innerHTML = `
-      <div class="card">
-        <h2 style="margin-bottom:12px;">✏️ Publish New Article</h2>
+  if (charIndex <= line.length) {
+    setTimeout(typeLine, typingSpeed);
+  } else {
+    tIndex++;
+    charIndex = 0;
+    setTimeout(typeLine, 300);
+  }
+}
 
-        <label><b>Category</b></label>
-        <select id="articleCategory" class="input">
-          <option value="">Select category</option>
-          <option value="poem">📜 Poem</option>
-          <option value="golpo">📘 Golpo</option>
-          <option value="probondho">📝 Probondho</option>
-          <option value="others">🎭 Others</option>
-        </select>
+typeLine();
 
-        <label><b>Thumbnail Image</b></label>
-        <input type="file" id="articleThumbnail" class="input">
+/* -------------------------------------------
+   ADMIN KEY CHECK INSIDE TERMINAL
+-------------------------------------------- */
+const correctKey = "1";
 
-        <label><b>Title</b></label>
-        <input type="text" id="articleTitle" class="input">
+termInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    const value = termInput.value.trim();
 
-        <label><b>Content</b></label>
-        <textarea id="articleContent" class="input"></textarea>
+    if (value === correctKey) {
+      document.getElementById("terminalScreen").style.display = "none";
+      document.getElementById("dashboardWrapper").style.display = "block";
+    } else {
+      termOut.innerHTML += `<div class="terminal-line">> Access Denied ❌</div>`;
+    }
 
-        <button id="publishArticle" class="button">Publish</button>
-      </div>
-    `;
-  };
+    termInput.value = "";
+  }
+});
 
-  // MANAGE ARTICLES
-  document.getElementById("menu-manage").onclick = () => {
-    activate(document.getElementById("menu-manage"));
-    loadArticles();
-  };
+/* -------------------------------------------
+   UI Navigation Logic
+-------------------------------------------- */
 
+function setActive(buttonId) {
+  document.querySelectorAll(".sidebar button").forEach(b => b.classList.remove("active"));
+  const btn = document.getElementById(buttonId);
+  if (btn) btn.classList.add("active");
+}
+
+/* Desktop */
+document.getElementById("menu-overview").onclick = () => loadOverview();
+document.getElementById("menu-profile").onclick = () => loadProfile();
+document.getElementById("menu-new").onclick = () => loadNewArticle();
+document.getElementById("menu-manage").onclick = () => loadManage();
+document.getElementById("menu-stats").onclick = () => loadStats();
+document.getElementById("menu-theme").onclick = () => toggleTheme();
+
+/* Mobile */
+document.getElementById("b-overview").onclick = () => loadOverview();
+document.getElementById("b-profile").onclick = () => loadProfile();
+document.getElementById("b-new").onclick = () => loadNewArticle();
+document.getElementById("b-manage").onclick = () => loadManage();
+document.getElementById("b-stats").onclick = () => loadStats();
+document.getElementById("b-theme").onclick = () => toggleTheme();
+
+/* Home Button */
+document.getElementById("homeBtn").onclick = () => {
+  window.location.href = "index.html";
 };
+
+/* Dark Mode */
+document.getElementById("themeBtn").onclick = () => toggleTheme();
+document.getElementById("menu-theme").onclick = () => toggleTheme();
+
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+}
+
+/* Load saved theme */
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark");
+}
+
+/* -------------------------------------------
+   PAGE LOADING FUNCTIONS
+-------------------------------------------- */
+
+function loadOverview() {
+  setActive("menu-overview");
+  contentArea.innerHTML = `
+    <div class="card">
+      <h2>🏠 Overview</h2>
+      <p>Welcome to the admin dashboard.</p>
+    </div>
+  `;
+}
+
+function loadProfile() {
+  setActive("menu-profile");
+
+  const user = JSON.parse(localStorage.getItem("loggedUser")) || {
+    displayName: "Unknown",
+    email: "Unknown",
+    uid: "Unknown",
+    photoURL: ""
+  };
+
+  contentArea.innerHTML = `
+    <div class="profileCard">
+      <h2 style="margin-bottom:12px;">👤 Profile</h2>
+
+      ${user.photoURL
+        ? `<img src="${user.photoURL}" style="width:90px;height:90px;border-radius:50%;margin:10px auto;">`
+        : `<div style="
+            width:90px;height:90px;border-radius:50%;
+            background:#dbeafe;color:#1e40af;font-size:42px;
+            display:flex;align-items:center;justify-content:center;
+            margin:10px auto;
+          ">${user.displayName.charAt(0).toUpperCase()}</div>`}
+
+      <p><b>${user.displayName}</b></p>
+      <p style="opacity:0.7;">${user.email}</p>
+      <p style="font-size:13px;opacity:0.5;">UID: ${user.uid}</p>
+    </div>
+  `;
+}
+
+function loadNewArticle() {
+  setActive("menu-new");
+
+  contentArea.innerHTML = `
+    <div class="card">
+      <h2>📝 New Article</h2>
+
+      <label>Category</label>
+      <select id="articleCategory" class="input">
+        <option value="">Select category</option>
+        <option value="poem">📜 Poem</option>
+        <option value="golpo">📘 Golpo</option>
+        <option value="probondho">📝 Probondho</option>
+        <option value="others">🎭 Others</option>
+      </select>
+
+      <label>Thumbnail</label>
+      <input type="file" id="articleThumbnail" class="input">
+
+      <label>Title</label>
+      <input type="text" id="articleTitle" class="input">
+
+      <label>Content</label>
+      <textarea id="articleContent" class="input"></textarea>
+
+      <button id="publishArticle" class="button" style="margin-top:12px;">Publish</button>
+    </div>
+  `;
+}
+
+function loadManage() {
+  setActive("menu-manage");
+  loadArticles();
+}
+
+function loadStats() {
+  setActive("menu-stats");
+
+  contentArea.innerHTML = `
+    <div class="card">
+      <h2>📈 Article Statistics</h2>
+      <canvas id="statsChart" style="margin-top:20px;"></canvas>
+    </div>
+  `;
+
+  drawChart();
+}
+
 </script>
 
-<!-- FIREBASE MODULE SCRIPT -->
+<!-- ============================================================
+     FIREBASE MODULE SCRIPT
+============================================================ -->
 <script type="module">
 
-/* ---------------------------
-      FIREBASE IMPORTS
-----------------------------*/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
   getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc 
@@ -297,9 +551,7 @@ import {
   getAuth, onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-/* ---------------------------
-      FIREBASE CONFIG
-----------------------------*/
+/* Firebase Config */
 const firebaseConfig = {
   apiKey: "AIzaSyCnFgBxGYqkMkYCTCbPPJzo8fbbZmylcHY",
   authDomain: "okkhorpotrya.firebaseapp.com",
@@ -315,15 +567,12 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const auth = getAuth(app);
 
-/* ---------------------------
-    REAL-TIME AUTH PROTECTION
-----------------------------*/
+/* Protect admin */
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "login.html";
     return;
   }
-
   localStorage.setItem("loggedUser", JSON.stringify({
     displayName: user.displayName || "",
     email: user.email || "",
@@ -332,18 +581,14 @@ onAuthStateChanged(auth, (user) => {
   }));
 });
 
-/* ---------------------------
-      LOGOUT
-----------------------------*/
+/* Logout */
 document.getElementById("logoutBtn").onclick = async () => {
   await signOut(auth);
   localStorage.removeItem("loggedUser");
   window.location.href = "login.html";
 };
 
-/* ---------------------------
-      PUBLISH ARTICLE
-----------------------------*/
+/* Publish Article */
 document.addEventListener("click", async (e) => {
   if (e.target.id === "publishArticle") {
 
@@ -370,19 +615,17 @@ document.addEventListener("click", async (e) => {
       createdAt: Date.now()
     });
 
-    alert("Article submitted successfully!");
+    alert("Article submitted!");
   }
 });
 
-/* ---------------------------
-      LOAD ARTICLES
-----------------------------*/
+/* Load Articles */
 window.loadArticles = async () => {
   const contentArea = document.getElementById("contentArea");
-  const docs = await getDocs(collection(db, "articles"));
+  const docsSnap = await getDocs(collection(db, "articles"));
 
   let html = "";
-  docs.forEach(d => {
+  docsSnap.forEach((d) => {
     const a = d.data();
 
     html += `
@@ -406,15 +649,15 @@ window.loadArticles = async () => {
         </div>
 
         <div>
-          ${a.status === "pending" ? `
-            <button class="button" style="padding:6px 10px;background:#16a34a;"
-              onclick="publishArticle('${d.id}')">Publish</button>
-          ` : `<span style="color:#16a34a;font-weight:600;">Published</span>`}
+          ${a.status === "pending"
+            ? `<button class="button" style="padding:6px 10px;background:#16a34a;"
+                onclick="publishArticle('${d.id}')">Publish</button>`
+            : `<span style="color:#16a34a;font-weight:600;">Published</span>`
+          }
 
           <button class="button" style="padding:6px 10px;background:#b91c1c;margin-left:6px;"
             onclick="deleteArticle('${d.id}')">Delete</button>
         </div>
-
       </div>
     `;
   });
@@ -427,21 +670,50 @@ window.loadArticles = async () => {
   `;
 };
 
-/* ---------------------------
-      PUBLISH ACTION
-----------------------------*/
+/* Publish Action */
 window.publishArticle = async (id) => {
-  await updateDoc(doc(db, "articles", id), { status:"published" });
+  await updateDoc(doc(db, "articles", id), { status: "published" });
   loadArticles();
 };
 
-/* ---------------------------
-      DELETE ARTICLE
-----------------------------*/
+/* Delete Action */
 window.deleteArticle = async (id) => {
   if (!confirm("Delete this article?")) return;
   await deleteDoc(doc(db, "articles", id));
   loadArticles();
+};
+
+/* Draw Stats Chart */
+window.drawChart = async () => {
+  const docsSnap = await getDocs(collection(db, "articles"));
+
+  let published = 0, pending = 0;
+  let poem = 0, golpo = 0, probondho = 0, others = 0;
+
+  docsSnap.forEach((d) => {
+    const a = d.data();
+
+    if (a.status === "published") published++;
+    else pending++;
+
+    if (a.category === "poem") poem++;
+    if (a.category === "golpo") golpo++;
+    if (a.category === "probondho") probondho++;
+    if (a.category === "others") others++;
+  });
+
+  new Chart(document.getElementById("statsChart"), {
+    type: "pie",
+    data: {
+      labels: ["Published", "Pending", "Poem", "Golpo", "Probondho", "Others"],
+      datasets: [{
+        data: [published, pending, poem, golpo, probondho, others],
+        backgroundColor: [
+          "#16a34a", "#eab308", "#3b82f6", "#ec4899", "#a855f7", "#f97316"
+        ]
+      }]
+    }
+  });
 };
 
 </script>
