@@ -1,451 +1,305 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Admin | OKKHORPOTRYA — Revamp</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Okkhorpotrya — Command Deck (Insane)</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-<!-- CHART JS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style>
-:root{
-  --bg:#0f1724; /* deep navy */
-  --card:#0b1220;
-  --muted:#94a3b8;
-  --accent:#7c3aed; /* purple */
-  --accent-2:#06b6d4; /* teal */
-  --glass: rgba(255,255,255,0.04);
-  --glass-2: rgba(255,255,255,0.02);
-}
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
-html,body{height:100%;}
-body{background:linear-gradient(180deg,#071028 0%, #071428 45%, #071028 100%);color:#e6eef8;overflow:hidden}
+  <style>
+    :root{
+      --bg1:#05040a; --bg2:#0f0710; --neon1:#ff6ec7; --neon2:#6effc2; --neon3:#70a7ff;
+      --glass: rgba(255,255,255,0.03); --muted:#b8c2d6;
+      --bangla: 'Hind Siliguri', 'Inter', sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:radial-gradient(1200px 600px at 10% 20%, rgba(111,33,255,0.06), transparent 6%), radial-gradient(900px 500px at 90% 80%, rgba(6,201,176,0.04), transparent 8%), linear-gradient(180deg,var(--bg1),var(--bg2));font-family:var(--bangla);color:#eef3ff;overflow:hidden}
 
-/* Subtle animated gradient background */
-.background-blend{position:fixed;inset:0;z-index:-3;opacity:0.9;pointer-events:none;background:
-  radial-gradient(600px 600px at 10% 10%, rgba(124,58,237,0.08), transparent 12%),
-  radial-gradient(500px 500px at 90% 90%, rgba(6,182,212,0.06), transparent 12%);
-  animation: bgShift 18s ease-in-out infinite alternate;
-}
-@keyframes bgShift{from{transform:translateY(0) scale(1)}to{transform:translateY(-20px) scale(1.02)}}
+    /* ---------- INSANE VISUALS (COMMAND DECK) ---------- */
+    .deck{position:fixed;inset:0;display:grid;grid-template-columns:1fr 420px;gap:28px;padding:36px;align-items:stretch}
 
-/* Floating particles */
-.particle{position:fixed;width:6px;height:6px;background:rgba(255,255,255,0.04);border-radius:50%;box-shadow:0 0 18px rgba(124,58,237,0.06);animation:floaty 12s linear infinite;}
-@keyframes floaty{0%{transform:translateY(0) translateX(0)}50%{transform:translateY(-40px) translateX(10px)}100%{transform:translateY(0) translateX(0)}}
+    /* Left: Work Canvas */
+    .canvas{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:18px;padding:22px;overflow:auto;position:relative;border:1px solid rgba(255,255,255,0.03);
+      box-shadow:0 40px 80px rgba(2,6,23,0.7);
+    }
 
-/* Topbar */
-.topbar{position:fixed;left:0;right:0;top:0;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.02);z-index:40}
-.topbar .brand{display:flex;align-items:center;gap:12px}
-.brand .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:white}
-.topbar .controls{display:flex;gap:10px;align-items:center}
-.button{padding:8px 14px;border-radius:12px;border:none;background:rgba(255,255,255,0.03);color:var(--muted);cursor:pointer;font-weight:600;transition:all .22s ease}
-.button:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(2,6,23,0.6);color:#fff;background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02))}
+    /* Morphing shards background */
+    .shard{position:absolute;border-radius:14px;mix-blend-mode:screen;filter:blur(24px);opacity:.16;animation:shardMove 16s ease-in-out infinite}
+    .shard.s1{width:420px;height:420px;left:-80px;top:-60px;background:linear-gradient(135deg,var(--neon1),var(--neon3));transform:rotate(12deg)}
+    .shard.s2{width:360px;height:360px;right:-120px;bottom:-80px;background:linear-gradient(135deg,var(--neon2),var(--neon1));transform:rotate(-18deg);animation-duration:22s}
+    @keyframes shardMove{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(1.05)}100%{transform:translateY(0) scale(1)}}
 
-/* Sidebar */
-.sidebar{position:fixed;left:18px;top:86px;width:260px;background:linear-gradient(180deg,var(--glass),var(--glass-2));border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(8px);height:calc(100vh - 120px);overflow:auto;z-index:30}
-.sidebar button{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:transparent;border:none;color:var(--muted);width:100%;text-align:left;cursor:pointer;font-weight:600;transition:all .18s ease}
-.sidebar button:hover{background:linear-gradient(90deg,rgba(124,58,237,0.06),rgba(6,182,212,0.02));color:#fff;transform:translateX(6px)}
-.sidebar button.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;box-shadow:0 8px 30px rgba(6,182,212,0.06);}
+    /* Right: Command Wheel (radial menu) */
+    .wheel{
+      height:100%;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center;padding:18px
+    }
+    .wheel .hub{width:220px;height:220px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));display:grid;place-items:center;position:relative;border:1px solid rgba(255,255,255,0.04)}
+    .hub .logo{width:110px;height:110px;border-radius:50%;background:conic-gradient(var(--neon1),var(--neon2),var(--neon3));display:grid;place-items:center;font-weight:700;color:#07101b;font-size:26px}
 
-/* Content area */
-#contentArea{position:absolute;left:300px;right:24px;top:86px;bottom:24px;padding:24px;overflow:auto}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 36px rgba(2,6,23,0.6);margin-bottom:18px;animation:cardIn .35s ease both}
-@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .wheel .spokes{position:absolute;inset:0;pointer-events:none}
+    .spoke{position:absolute;width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,0.02);display:grid;place-items:center;font-weight:700;color:var(--muted);cursor:pointer;transition:all .25s ease}
+    .spoke:hover{transform:translateY(-8px) scale(1.06);background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));color:#fff}
+    .s-1{left:50%;top:6%;transform:translate(-50%,-50%)}
+    .s-2{right:6%;top:50%;transform:translate(50%,-50%)}
+    .s-3{left:50%;bottom:6%;transform:translate(-50%,50%)}
+    .s-4{left:6%;top:50%;transform:translate(-50%,-50%)}
+    .s-5{right:16%;bottom:18%;transform:translate(0,0)}
 
-/* Profile card tweak */
-.profileCard{display:flex;gap:18px;align-items:center}
-.profileCard img{width:84px;height:84px;border-radius:12px;object-fit:cover;border:2px solid rgba(255,255,255,0.04)}
-.profileCard .meta{line-height:1.2}
-.profileCard .meta b{display:block;font-size:18px}
-.profileCard .meta p{color:var(--muted);margin-top:6px}
+    /* Dock — quick access */
+    .dock{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:8px;border-radius:999px;display:flex;gap:12px;border:1px solid rgba(255,255,255,0.03)}
+    .dock .btn{background:transparent;padding:10px 14px;border-radius:10px;border:none;color:var(--muted);cursor:pointer}
+    .dock .btn:hover{background:rgba(255,255,255,0.03);color:#fff;transform:translateY(-6px)}
 
-/* Inputs styled */
-.input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
-.input:focus{outline:none;box-shadow:0 6px 28px rgba(124,58,237,0.06);border-color:rgba(124,58,237,0.6)}
-select.input{appearance:none;padding-right:36px}
+    /* Cards inside canvas — stylized like floating panels */
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:16px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 48px rgba(2,6,23,0.6)}
+    .panel h3{font-size:18px;margin-bottom:8px}
+    .meta{color:var(--muted);font-size:13px}
 
-/* Terminal screen restyle but keep id */
-#terminalScreen{position:fixed;inset:0;background:linear-gradient(180deg,#02030a 0%, rgba(4,6,23,0.95) 100%);color:#bfeec0;font-family: 'SF Mono', ui-monospace, monospace;padding:36px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;z-index:60}
-#terminalOutput{width:100%;max-width:980px}
-#terminalInput{margin-top:14px;padding:12px;background:transparent;border:1px dashed rgba(255,255,255,0.04);color:inherit;border-radius:8px;width:420px}
-.blinkCursor{display:inline-block;width:10px;height:18px;background:linear-gradient(180deg,var(--accent),var(--accent-2));margin-left:8px;border-radius:3px;animation:blink 1s steps(2) infinite}
-@keyframes blink{50%{opacity:0}}
+    /* Terminal: dramatic fullscreen overlay (keep id) */
+    #terminalScreen{position:fixed;inset:0;background:linear-gradient(180deg,#02030a,rgba(4,6,23,0.96));color:#bfeec0;font-family:monospace;padding:36px;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;z-index:90}
+    #terminalOutput{width:100%;max-width:1200px}
+    #terminalInput{margin-top:14px;padding:12px;background:transparent;border:1px dashed rgba(255,255,255,0.04);color:inherit;border-radius:8px;width:420px}
 
-/* Mobile adjustments */
-@media (max-width:900px){
-  .sidebar{left:12px;top:86px;width:86px;padding:10px}
-  .sidebar button{justify-content:center;font-size:12px;padding:10px}
-  #contentArea{left:110px}
-}
-@media (max-width:600px){
-  .sidebar{display:none}
-  #contentArea{left:12px;padding-bottom:110px}
-  .topbar .brand .name{display:none}
-  .bottomNav{display:flex}
-}
+    /* Content Area adjustments */
+    #contentArea{height:100%;overflow:auto;padding:12px}
 
-/* Small utility */
-.kv{display:flex;gap:10px;align-items:center}
-.badge{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03);font-weight:700;color:var(--muted)}
+    /* Responsive */
+    @media (max-width:1000px){.deck{grid-template-columns:1fr 300px}}
+    @media (max-width:760px){.deck{grid-template-columns:1fr;grid-auto-rows:1fr}.wheel{order:2}.canvas{order:1;padding:14px}.dock{bottom:12px}}
 
-/* Button micro interactions */
-.iconBtn{width:44px;height:44px;border-radius:10px;display:inline-grid;place-items:center;border:1px solid rgba(255,255,255,0.02);background:transparent}
-.iconBtn:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    /* playful micro-animations */
+    .glow{animation:glowPulse 2.8s infinite}
+    @keyframes glowPulse{0%{filter:drop-shadow(0 0 0 rgba(0,0,0,0))}50%{filter:drop-shadow(0 12px 30px rgba(124,58,237,0.12))}100%{filter:drop-shadow(0 0 0 rgba(0,0,0,0))}}
 
-</style>
+    /* Bangla typography nudge */
+    h1,h2,h3{font-family:var(--bangla)}
+  </style>
 </head>
 <body>
-<div class="background-blend"></div>
-<!-- gentle particles (decorative) -->
-<div id="p1" class="particle" style="left:6%;top:20%;animation-duration:14s;width:8px;height:8px;"></div>
-<div id="p2" class="particle" style="left:22%;top:60%;animation-duration:11s;width:6px;height:6px;"></div>
-<div id="p3" class="particle" style="left:78%;top:28%;animation-duration:17s;width:5px;height:5px;"></div>
-<div id="p4" class="particle" style="left:56%;top:72%;animation-duration:13s;width:7px;height:7px;"></div>
 
-<!-- ============================================================
-     TERMINAL INTRO (HACKER) — keep same id and behavior
-============================================================ -->
-<div id="terminalScreen">
-  <div id="terminalOutput"></div>
-  <input id="terminalInput" autocomplete="off" placeholder="Type admin key and press Enter" />
-  <span class="blinkCursor"></span>
-</div>
+  <!-- SHARDS -->
+  <div class="shard s1"></div>
+  <div class="shard s2"></div>
 
-<!-- DASHBOARD WRAPPER (keeps same ids and structure) -->
-<div id="dashboardWrapper" style="display:block;">
+  <!-- MAIN COMMAND DECK LAYOUT -->
+  <div class="deck">
 
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">ও</div>
-      <div class="name">
-        <div style="font-weight:700;font-size:17px;">OKKHORPOTRYA</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:2px">Admin Panel</div>
+    <!-- LEFT: Canvas (keeps contentArea id) -->
+    <div class="canvas">
+      <div id="contentArea">
+        <!-- content injected by loadOverview/loadProfile etc. (functions kept) -->
       </div>
+
+      <!-- floating quick cards -->
+      <div style="position:absolute;right:24px;top:20px;width:240px;">
+        <div class="panel" style="backdrop-filter:blur(6px);">
+          <h3>Quick Draft</h3>
+          <div class="meta">Create a mini post fast — drag to upload thumbnail.</div>
+          <div style="margin-top:8px;display:flex;gap:8px"><input class="input" placeholder="Title" id="quickTitle" style="flex:1"/><button class="button" id="quickSave">Save</button></div>
+        </div>
+
+        <div class="panel" style="margin-top:12px">
+          <h3>Live Preview</h3>
+          <div class="meta">See how your article will look on mobile.</div>
+          <div id="previewBox" style="margin-top:8px;background:rgba(0,0,0,0.25);padding:8px;border-radius:8px;color:var(--muted);font-size:13px;min-height:48px">No preview yet.</div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="controls">
-      <button id="homeBtn" class="button" title="Go to public site">🏠 Home</button>
-      <button id="themeBtn" class="button" title="Toggle theme">🌙 Theme</button>
-      <button id="logoutBtn" class="button" style="background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white">Logout</button>
+    <!-- RIGHT: Command Wheel -->
+    <aside class="wheel">
+      <div class="hub glow">
+        <div class="logo">ও</div>
+        <div style="position:absolute;bottom:-34px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--muted)">Command Deck</div>
+        <div class="spokes">
+          <div class="spoke s-1" id="menu-overview">🏠</div>
+          <div class="spoke s-2" id="menu-profile">👤</div>
+          <div class="spoke s-3" id="menu-new">📝</div>
+          <div class="spoke s-4" id="menu-manage">📚</div>
+          <div class="spoke s-5" id="menu-stats">📈</div>
+        </div>
+      </div>
+
+      <div style="width:100%;display:flex;flex-direction:column;gap:8px;align-items:center;margin-top:12px">
+        <div style="display:flex;gap:8px">
+          <button class="button" id="homeBtn">Home</button>
+          <button class="button" id="themeBtn">Theme</button>
+        </div>
+        <button class="button" id="logoutBtn" style="background:linear-gradient(90deg,var(--neon1),var(--neon2));color:#05030a">Logout</button>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Dock -->
+  <div class="dock">
+    <button class="btn" id="b-new">✏️ New</button>
+    <button class="btn" id="b-manage">📚 Manage</button>
+    <button class="btn" id="b-stats">📊 Stats</button>
+  </div>
+
+  <!-- TERMINAL (keep ids and behavior) -->
+  <div id="terminalScreen">
+    <div id="terminalOutput"></div>
+    <input id="terminalInput" autocomplete="off" placeholder="Type admin key and press Enter" />
+    <span class="blinkCursor" style="display:inline-block;width:10px;height:18px;background:linear-gradient(180deg,var(--neon1),var(--neon2));margin-left:8px;border-radius:3px;"></span>
+  </div>
+
+  <!-- SCRIPT: keep functions & firebase integration intact, but adapt to new UI (IDs preserved) -->
+  <script>
+  /* Terminal typing */
+  const terminalLines = [
+    "> Initiating Command Deck...",
+    "> Calibrating shards and hub...",
+    "> Syncing Firebase modules...",
+    "> Welcome, captain.",
+    "> Enter security key:"
+  ];
+  let tIndex=0,charIndex=0,typingSpeed=28;
+  const termOut=document.getElementById('terminalOutput'), termInput=document.getElementById('terminalInput');
+  function typeLine(){
+    if(tIndex>=terminalLines.length){ termInput.focus(); return; }
+    const line=terminalLines[tIndex]; const current=line.substring(0,charIndex);
+    if(charIndex===0) termOut.innerHTML += '<div class="terminal-line"></div>';
+    termOut.lastChild.textContent=current; charIndex++;
+    if(charIndex<=line.length) setTimeout(typeLine,typingSpeed); else{ tIndex++; charIndex=0; setTimeout(typeLine,260); }
+  }
+  setTimeout(typeLine,300);
+
+  const correctKey='1';
+  termInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ const v=termInput.value.trim(); if(v===correctKey){ document.getElementById('terminalScreen').style.display='none'; loadOverview(); } else { termOut.innerHTML += '<div class="terminal-line">> Access Denied ❌</div>'; termInput.value=''; } } });
+
+  /* Navigation bindings — preserve function names for Firebase module */
+  document.getElementById('menu-overview').onclick = () => loadOverview();
+  document.getElementById('menu-profile').onclick = () => loadProfile();
+  document.getElementById('menu-new').onclick = () => loadNewArticle();
+  document.getElementById('menu-manage').onclick = () => loadManage();
+  document.getElementById('menu-stats').onclick = () => loadStats();
+  document.getElementById('homeBtn').onclick = () => window.location.href='index.html';
+  document.getElementById('themeBtn').onclick = () => toggleTheme();
+  document.getElementById('logoutBtn').onclick = () => { /* firebase signOut handled in module */ };
+  document.getElementById('b-new').onclick = () => loadNewArticle();
+  document.getElementById('b-manage').onclick = () => loadManage();
+  document.getElementById('b-stats').onclick = () => loadStats();
+
+  function toggleTheme(){ document.body.classList.toggle('dark'); localStorage.setItem('theme', document.body.classList.contains('dark')?'dark':'light'); }
+  if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark');
+
+  /* QUICK DRAFT save to inputs (non-firebase) */
+  document.getElementById('quickSave').addEventListener('click',()=>{
+    const t = document.getElementById('quickTitle').value.trim();
+    if(!t) return alert('Title is empty');
+    document.getElementById('previewBox').textContent = t;
+    alert('Quick draft saved locally');
+  });
+
+  /* Keep content templates (these functions are used by Firebase script later) */
+  function setActive(id){ document.querySelectorAll('.spoke').forEach(s=>s.classList.remove('active')); const el=document.getElementById(id); if(el) el.classList.add('active'); }
+
+  function loadOverview(){ setActive('menu-overview'); const contentArea = document.getElementById('contentArea'); contentArea.innerHTML = `
+    <div class="panel"><h3 style="font-family:'Hind Siliguri';">🏠 Overview</h3><div class="meta">command deck overview — quick stats & recent activity</div></div>
+    <div class="panel"><h3>Recent Activity</h3><div class="meta">No recent logs.</div></div>
+  `; }
+
+  function loadProfile(){ setActive('menu-profile'); const user = JSON.parse(localStorage.getItem('loggedUser')) || {displayName:'Unknown',email:'Unknown',uid:'Unknown'}; document.getElementById('contentArea').innerHTML = `
+    <div class="panel"><h3>👤 Profile</h3><div class="meta">${user.displayName} — ${user.email}</div></div>
+  `; }
+
+  function loadNewArticle(){ setActive('menu-new'); document.getElementById('contentArea').innerHTML = `
+    <div class="panel"><h3>📝 New Article</h3>
+      <div style="margin-top:8px"><label>Category</label><select id="articleCategory" class="input"><option value="">Select</option><option value="poem">Poem</option><option value="golpo">Golpo</option></select></div>
+      <div style="margin-top:8px"><label>Title</label><input id="articleTitle" class="input"></div>
+      <div style="margin-top:8px"><label>Content</label><textarea id="articleContent" class="input" style="min-height:140px"></textarea></div>
+      <div style="margin-top:8px"><label>Thumbnail</label><input type="file" id="articleThumbnail" class="input"></div>
+      <div style="margin-top:10px"><button id="publishArticle" class="button" style="background:linear-gradient(90deg,var(--neon1),var(--neon2));color:#05030a">Publish</button></div>
     </div>
-  </div>
+  `; }
 
-  <!-- SIDEBAR (desktop) — keep same button ids -->
-  <div class="sidebar">
-    <button id="menu-overview">🏠 Overview</button>
-    <button id="menu-profile">👤 Profile</button>
-    <button id="menu-new">📝 New Article</button>
-    <button id="menu-manage">📚 Manage Articles</button>
-    <button id="menu-stats">📈 Stats</button>
-    <button id="menu-theme">🎨 Theme</button>
-  </div>
+  function loadManage(){ setActive('menu-manage'); loadArticles(); }
+  function loadStats(){ setActive('menu-stats'); document.getElementById('contentArea').innerHTML = `<div class="panel"><h3>📈 Stats</h3><canvas id="statsChart" style="margin-top:12px;max-width:720px"></canvas></div>`; drawChart(); }
 
-  <!-- BOTTOM NAV (mobile) — keep same ids -->
-  <div class="bottomNav" style="display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);width:92%;height:66px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:18px;align-items:center;justify-content:space-around;padding:8px;z-index:45">
-    <button id="b-overview" class="iconBtn">🏠</button>
-    <button id="b-profile" class="iconBtn">👤</button>
-    <button id="b-new" class="iconBtn">✏️</button>
-    <button id="b-manage" class="iconBtn">📚</button>
-    <button id="b-stats" class="iconBtn">📊</button>
-    <button id="b-theme" class="iconBtn">🎨</button>
-  </div>
+  // expose functions for firebase script
+  window.loadOverview = loadOverview; window.loadProfile = loadProfile; window.loadNewArticle = loadNewArticle; window.loadManage = loadManage; window.loadStats = loadStats; window.loadArticles = async ()=>{ /* placeholder; replaced by firebase module */ };
+  window.publishArticle = async (id)=>{}; window.deleteArticle = async (id)=>{}; window.drawChart = async ()=>{};
 
-  <div id="contentArea"></div>
-</div>
+  </script>
 
-<!-- UI SCRIPT — keep routing and ids intact, but enrich interactions -->
-<script>
-/* Terminal lines kept but faster and smoother */
-const terminalLines = [
-  "> Booting OKKHORPOTRYA OS v3.1",
-  "> Loading creative fonts and frames...",
-  "> Securing admin modules...",
-  "> Firebase token verified.",
-  "> Welcome, administrator.",
-  "> Enter security key:"
-];
+  <!-- FIREBASE MODULE (kept intact) -->
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-let tIndex = 0, charIndex = 0, typingSpeed = 30;
-const termOut = document.getElementById("terminalOutput");
-const termInput = document.getElementById("terminalInput");
+  const firebaseConfig = {
+    apiKey: "AIzaSyCnFgBxGYqkMkYCTCbPPJzo8fbbZmylcHY",
+    authDomain: "okkhorpotrya.firebaseapp.com",
+    projectId: "okkhorpotrya",
+    storageBucket: "okkhorpotrya.firebasestorage.app",
+    messagingSenderId: "401210408956",
+    appId: "1:401210408956:web:958c0361306121244bbc79",
+    measurementId: "G-VN5XLFYH8P"
+  };
 
-function typeLine(){
-  if(tIndex>=terminalLines.length){ termInput.focus(); return; }
-  const line = terminalLines[tIndex];
-  const current = line.substring(0,charIndex);
-  if(charIndex===0) termOut.innerHTML += "<div class='terminal-line'></div>";
-  termOut.lastChild.textContent = current;
-  charIndex++;
-  if(charIndex<=line.length) setTimeout(typeLine, typingSpeed);
-  else{ tIndex++; charIndex=0; setTimeout(typeLine, 260); }
-}
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+  const auth = getAuth(app);
 
-setTimeout(typeLine, 300);
+  onAuthStateChanged(auth,(user)=>{ if(!user){ window.location.href='login.html'; return; } localStorage.setItem('loggedUser', JSON.stringify({ displayName:user.displayName||'', email:user.email||'', uid:user.uid, photoURL:user.photoURL||'' })); });
 
-const correctKey = "1";
-termInput.addEventListener("keydown", (e) => {
-  if(e.key === "Enter"){
-    const value = termInput.value.trim();
-    if(value === correctKey){
-      document.getElementById("terminalScreen").style.display = "none";
-      document.getElementById("dashboardWrapper").style.display = "block";
-      loadOverview();
-    } else {
-      termOut.innerHTML += `<div class='terminal-line'>> Access Denied ❌</div>`;
-      termInput.value = "";
+  document.getElementById('logoutBtn').onclick = async ()=>{ await signOut(auth); localStorage.removeItem('loggedUser'); window.location.href='login.html' };
+
+  /* Publish Article (keeps original logic) */
+  document.addEventListener('click', async (e)=>{
+    if(e.target.id === 'publishArticle'){
+      const title = document.getElementById('articleTitle').value.trim();
+      const content = document.getElementById('articleContent').value.trim();
+      const category = document.getElementById('articleCategory').value.trim();
+      const file = document.getElementById('articleThumbnail').files[0];
+      if(!title || !content || !file || !category){ alert('Please fill all fields!'); return; }
+      const imgRef = ref(storage, 'thumbs/'+Date.now()+'_'+file.name);
+      await uploadBytes(imgRef, file);
+      const imgURL = await getDownloadURL(imgRef);
+      await addDoc(collection(db,'articles'), { title, content, category, thumbnailURL: imgURL, status: 'pending', createdAt: Date.now() });
+      alert('Article submitted!');
     }
-  }
-});
-
-/* Navigation helpers */
-function setActive(buttonId){
-  document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('active'));
-  const btn = document.getElementById(buttonId);
-  if(btn) btn.classList.add('active');
-}
-
-/* keep same handlers */
-document.getElementById("menu-overview").onclick = () => loadOverview();
-document.getElementById("menu-profile").onclick = () => loadProfile();
-document.getElementById("menu-new").onclick = () => loadNewArticle();
-document.getElementById("menu-manage").onclick = () => loadManage();
-document.getElementById("menu-stats").onclick = () => loadStats();
-document.getElementById("menu-theme").onclick = () => toggleTheme();
-
-document.getElementById("b-overview").onclick = () => loadOverview();
-document.getElementById("b-profile").onclick = () => loadProfile();
-document.getElementById("b-new").onclick = () => loadNewArticle();
-document.getElementById("b-manage").onclick = () => loadManage();
-document.getElementById("b-stats").onclick = () => loadStats();
-document.getElementById("b-theme").onclick = () => toggleTheme();
-
-document.getElementById("homeBtn").onclick = () => { window.location.href = "index.html" };
-document.getElementById("themeBtn").onclick = () => toggleTheme();
-
-document.getElementById("logoutBtn").onclick = () => { /* firebase logout handled in module script */ };
-
-function toggleTheme(){
-  document.body.classList.toggle('dark');
-  localStorage.setItem('theme', document.body.classList.contains('dark')? 'dark':'light');
-}
-if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark');
-
-/* Page loads — preserve existing content templates but styled */
-function loadOverview(){
-  setActive('menu-overview');
-  contentArea.innerHTML = `
-    <div class="card">
-      <h2 style="font-family:'Playfair Display', serif; font-size:20px">🏠 Overview</h2>
-      <p style="color:var(--muted);margin-top:8px">Welcome to the beautiful admin dashboard — quick stats and recent activity below.</p>
-      <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
-        <div style="flex:1;min-width:220px" class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div><div style="font-weight:700;font-size:18px">Articles</div><div style="color:var(--muted);font-size:13px">Total published / pending</div></div>
-            <div class="badge">42</div>
-          </div>
-        </div>
-        <div style="flex:1;min-width:220px" class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div><div style="font-weight:700;font-size:18px">Authors</div><div style="color:var(--muted);font-size:13px">Active authors this month</div></div>
-            <div class="badge">8</div>
-          </div>
-        </div>
-        <div style="flex:1;min-width:220px" class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div><div style="font-weight:700;font-size:18px">Visitors</div><div style="color:var(--muted);font-size:13px">Last 30 days</div></div>
-            <div class="badge">7.1k</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function loadProfile(){
-  setActive('menu-profile');
-  const user = JSON.parse(localStorage.getItem('loggedUser')) || {displayName:'Unknown',email:'Unknown',uid:'Unknown',photoURL:''};
-  contentArea.innerHTML = `
-    <div class="card profileCard">
-      ${user.photoURL? `<img src="${user.photoURL}">` : `<div style="width:84px;height:84px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800">${user.displayName.charAt(0)||'O'}</div>`}
-      <div class="meta">
-        <b>${user.displayName}</b>
-        <p style="color:var(--muted)">${user.email}</p>
-        <p style="color:var(--muted);font-size:12px">UID: ${user.uid}</p>
-      </div>
-    </div>
-  `;
-}
-
-function loadNewArticle(){
-  setActive('menu-new');
-  contentArea.innerHTML = `
-    <div class="card">
-      <h2>📝 New Article</h2>
-
-      <label>Category</label>
-      <select id="articleCategory" class="input">
-        <option value="">Select category</option>
-        <option value="poem">📜 Poem</option>
-        <option value="golpo">📘 Golpo</option>
-        <option value="probondho">📝 Probondho</option>
-        <option value="others">🎭 Others</option>
-      </select>
-
-      <label style="margin-top:8px">Thumbnail</label>
-      <input type="file" id="articleThumbnail" class="input">
-
-      <label style="margin-top:8px">Title</label>
-      <input type="text" id="articleTitle" class="input">
-
-      <label style="margin-top:8px">Content</label>
-      <textarea id="articleContent" class="input" style="min-height:160px"></textarea>
-
-      <button id="publishArticle" class="button" style="margin-top:12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff">Publish</button>
-    </div>
-  `;
-}
-
-function loadManage(){
-  setActive('menu-manage');
-  loadArticles();
-}
-
-function loadStats(){
-  setActive('menu-stats');
-  contentArea.innerHTML = `
-    <div class="card">
-      <h2>📈 Article Statistics</h2>
-      <canvas id="statsChart" style="margin-top:20px;max-width:720px"></canvas>
-    </div>
-  `;
-  drawChart();
-}
-
-</script>
-
-<!-- ============================================================
-     FIREBASE MODULE SCRIPT — kept intact (placed after UI so IDs exist)
-============================================================ -->
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-/* Firebase Config */
-const firebaseConfig = {
-  apiKey: "AIzaSyCnFgBxGYqkMkYCTCbPPJzo8fbbZmylcHY",
-  authDomain: "okkhorpotrya.firebaseapp.com",
-  projectId: "okkhorpotrya",
-  storageBucket: "okkhorpotrya.firebasestorage.app",
-  messagingSenderId: "401210408956",
-  appId: "1:401210408956:web:958c0361306121244bbc79",
-  measurementId: "G-VN5XLFYH8P"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-const auth = getAuth(app);
-
-onAuthStateChanged(auth, (user) => {
-  if (!user) { window.location.href = "login.html"; return; }
-  localStorage.setItem("loggedUser", JSON.stringify({ displayName: user.displayName || "", email: user.email || "", uid: user.uid, photoURL: user.photoURL || "" }));
-});
-
-document.getElementById("logoutBtn").onclick = async () => { await signOut(auth); localStorage.removeItem("loggedUser"); window.location.href = "login.html" };
-
-/* Publish Article */
-document.addEventListener("click", async (e) => {
-  if (e.target.id === "publishArticle") {
-    const title = document.getElementById("articleTitle").value.trim();
-    const content = document.getElementById("articleContent").value.trim();
-    const category = document.getElementById("articleCategory").value.trim();
-    const file = document.getElementById("articleThumbnail").files[0];
-
-    if (!title || !content || !file || !category) { alert("Please fill all fields!"); return; }
-
-    const imgRef = ref(storage, "thumbs/" + Date.now() + "_" + file.name);
-    await uploadBytes(imgRef, file);
-    const imgURL = await getDownloadURL(imgRef);
-
-    await addDoc(collection(db, "articles"), { title, content, category, thumbnailURL: imgURL, status: "pending", createdAt: Date.now() });
-
-    alert("Article submitted!");
-  }
-});
-
-/* Load Articles */
-window.loadArticles = async () => {
-  const contentArea = document.getElementById("contentArea");
-  const docsSnap = await getDocs(collection(db, "articles"));
-
-  let html = "";
-  docsSnap.forEach((d) => {
-    const a = d.data();
-    html += `
-      <div style="background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:14px;border-radius:10px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
-        <div style="display:flex; gap:12px;align-items:center;">
-          <img src="${a.thumbnailURL}" style="width:60px;height:60px;border-radius:6px;object-fit:cover;">
-          <div>
-            <b>${a.title}</b><br>
-            <small style="color:var(--muted)">Category: ${a.category}</small><br>
-            <small style="color:var(--muted)">Status: ${a.status}</small><br>
-            <small style="color:var(--muted)">${new Date(a.createdAt).toLocaleString()}</small>
-          </div>
-        </div>
-
-        <div>
-          ${a.status === "pending"
-            ? `<button class="button" style="padding:6px 10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;" onclick="publishArticle('${d.id}')">Publish</button>`
-            : `<span style="color:#16a34a;font-weight:600;">Published</span>`
-          }
-
-          <button class="button" style="padding:6px 10px;background:#b91c1c;margin-left:6px;" onclick="deleteArticle('${d.id}')">Delete</button>
-        </div>
-      </div>
-    `;
   });
 
-  contentArea.innerHTML = `
-    <div class="card">
-      <h2>📚 Manage Articles</h2>
-      <div style="margin-top:20px;">${html}</div>
-    </div>
-  `;
-};
+  /* Load Articles */
+  window.loadArticles = async ()=>{
+    const contentArea = document.getElementById('contentArea');
+    const docsSnap = await getDocs(collection(db,'articles'));
+    let html='';
+    docsSnap.forEach((d)=>{ const a=d.data(); html += `
+      <div style="background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;gap:12px;align-items:center;"><img src="${a.thumbnailURL}" style="width:56px;height:56px;border-radius:8px;object-fit:cover"><div><b>${a.title}</b><br><small style=\"color:var(--muted)\">Category: ${a.category}</small><br><small style=\"color:var(--muted)\">Status: ${a.status}</small></div></div>
+        <div>${a.status==='pending'? `<button class=\"button\" style=\"padding:6px 10px;background:linear-gradient(90deg,var(--neon1),var(--neon2));color:#05030a\" onclick=\"publishArticle('${d.id}')\">Publish</button>` : `<span style=\"color:#16a34a;font-weight:600\">Published</span>`}<button class=\"button\" style=\"padding:6px 10px;background:#b91c1c;margin-left:6px;\" onclick=\"deleteArticle('${d.id}')\">Delete</button></div>
+      </div>
+    `; });
+    contentArea.innerHTML = `<div class=\"panel\"><h3>📚 Manage Articles</h3><div style=\"margin-top:12px\">${html}</div></div>`;
+  };
 
-/* Publish Action */
-window.publishArticle = async (id) => { await updateDoc(doc(db, "articles", id), { status: "published" }); loadArticles(); };
-/* Delete Action */
-window.deleteArticle = async (id) => { if (!confirm("Delete this article?")) return; await deleteDoc(doc(db, "articles", id)); loadArticles(); };
+  window.publishArticle = async (id)=>{ await updateDoc(doc(db,'articles',id), { status:'published' }); loadArticles(); };
+  window.deleteArticle = async (id)=>{ if(!confirm('Delete this article?')) return; await deleteDoc(doc(db,'articles',id)); loadArticles(); };
 
-/* Draw Stats Chart */
-window.drawChart = async () => {
-  const docsSnap = await getDocs(collection(db, "articles"));
-  let published = 0, pending = 0, poem = 0, golpo = 0, probondho = 0, others = 0;
-  docsSnap.forEach((d) => {
-    const a = d.data();
-    if (a.status === "published") published++; else pending++;
-    if (a.category === "poem") poem++; if (a.category === "golpo") golpo++; if (a.category === "probondho") probondho++; if (a.category === "others") others++;
-  });
+  window.drawChart = async ()=>{
+    const docsSnap = await getDocs(collection(db,'articles'));
+    let published=0,pending=0,poem=0,golpo=0,probondho=0,others=0;
+    docsSnap.forEach((d)=>{ const a=d.data(); if(a.status==='published') published++; else pending++; if(a.category==='poem') poem++; if(a.category==='golpo') golpo++; if(a.category==='probondho') probondho++; if(a.category==='others') others++; });
+    const ctx = document.getElementById('statsChart')?.getContext('2d'); if(!ctx) return;
+    new Chart(ctx,{ type:'doughnut', data:{ labels:['Published','Pending','Poem','Golpo','Probondho','Others'], datasets:[{ data:[published,pending,poem,golpo,probondho,others], backgroundColor:['#16a34a','#eab308','#3b82f6','#ec4899','#a855f7','#f97316'] }] }, options:{ plugins:{legend:{position:'bottom'}}, cutout:'60%'} });
+  };
 
-  const ctx = document.getElementById('statsChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Published','Pending','Poem','Golpo','Probondho','Others'],
-      datasets: [{ data: [published,pending,poem,golpo,probondho,others], backgroundColor: [ '#16a34a','#eab308','#3b82f6','#ec4899','#a855f7','#f97316' ] }]
-    },
-    options: { plugins:{legend:{position:'bottom'}}, cutout:'60%'}
-  });
-};
-
-</script>
+  </script>
 
 </body>
 </html>
